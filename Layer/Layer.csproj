@@ -277,6 +277,16 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eSaleModel\eSaleModel.csproj">
+      <Project>{55542680-b257-472c-9e0e-86439d6e4603}</Project>
+      <Name>eSaleModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\eSaleService\eSaleService.csproj">
+      <Project>{0fd33ffc-b1ef-45ac-afb3-13ed7f372be8}</Project>
+      <Name>eSaleService</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
