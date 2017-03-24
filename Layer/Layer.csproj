@@ -198,6 +198,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -265,6 +266,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -282,9 +284,9 @@
       <Project>{55542680-b257-472c-9e0e-86439d6e4603}</Project>
       <Name>eSaleModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\eSaleService\eSaleService.csproj">
-      <Project>{0fd33ffc-b1ef-45ac-afb3-13ed7f372be8}</Project>
-      <Name>eSaleService</Name>
+    <ProjectReference Include="..\eSalesService\eSalesService.csproj">
+      <Project>{21ad7b4c-3a0c-4fdd-b9dd-04acf512a487}</Project>
+      <Name>eSalesService</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EA6A3BAB-5F04-4509-979C-0072D0789815}</ProjectGuid>
+    <ProjectGuid>{9A6A4110-5419-4CB4-961E-F1CAE548666F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>eSaleDao</RootNamespace>
@@ -40,7 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmpDao.cs" />
+    <Compile Include="OrderDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShipDao.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\eSaleModel\eSaleModel.csproj">

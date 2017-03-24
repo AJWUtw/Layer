@@ -8,5 +8,9 @@ namespace eSaleService
 {
     class OrderService
     {
+        public eSaleModel.Order GetOrderById(string id)
+        {
+            eSaleOrder
+        }
     }
 }
