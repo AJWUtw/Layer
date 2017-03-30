@@ -1,5 +1,5 @@
 ﻿
-require(["dojo/data/ItemFileWriteStore", "dojox/grid/DataGrid"]);
+require(["dojo/data/ItemFileWriteStore", "dojox/grid/DataGrid", "dijit/form/Button", "dijit/Dialog"]);
 
 var orderAction = new OrderAction();
 var orderId = "default";
@@ -17,14 +17,11 @@ function OrderAction() {
                         form: dom.byId("searchOrderCondition"),
                         handleAs: "json",
                         load: function (jsonData) {
-                            console.log(jsonData);
                             store = new ItemFileWriteStore({ data: jsonData });
                             
                             ready(function () {
                                 orderStore.close();
-                                console.log(store);
                                 orderGrid.setStore(store);
-                                console.log(orderGrid.store);
                                 orderGrid._refresh();
                             });
                             
@@ -85,3 +82,4 @@ function OrderAction() {
 
 
 }
+
