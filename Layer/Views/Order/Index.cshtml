@@ -11,127 +11,78 @@
     <meta name="viewport" content="width=device-width" />
 
     <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js" data-dojo-config="parseOnLoad: true, locale: 'es-es'"></script>
+
+    <script src="~/Scripts/order.js"></script>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css" media="screen">
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/form/resources/CheckedMultiSelect.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/Grid.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/claroGrid.css" />
     <title>Index</title>
-    <script>
-        function SubmitFeatureData() {
-            require(["dojo/dom", "dojo/request", "dojo/dom-form"],
-            function (dom, request, domForm) {
-
-                var form = dom.byId('FeatureDetails');
-
-                // Post the data to the server
-                request.post("/Order/GetOrderByCondition", {
-                    // Send the username and password
-                    data: domForm.toObject("FeatureDetails"),
-                    // Wait 2 seconds for a response
-                    timeout: 2000
-
-                }).then(function (response) {
-                    // put something here later.
-                });
-
-            }
-            );
-
-        }
-
-    </script>
 </head>
 <body>
 
-    @using (Ajax.BeginForm("GetOrderByCondition", "Order", new AjaxOptions { UpdateTargetId = "result" })) 
-    {
-        @Html.AntiForgeryToken()
-        <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <table>
-                <tr>
-
-                    <td>
-                        @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        
-                        @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @class = "form-control", @min = "0", @step = "1", @value = 0 } })
-                        @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData )
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
-                        @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date",@value= "{0:yyyy-MM-dd}" })
-                        @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
-                    </td>
-                    <td>
-                        @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </td>
-                    <td class="form-group">
-                        @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
-                        @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Search" onclick="SubmitFeatureData.searchOrder" class="btn btn-default" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    }
     <div id="result"></div>
-    <div id="roomStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props="url:'./Order/GetOrderByCondition',cleadOnClose:true" data-dojo-id="orderStore"></div>
-    <div data-dojo-type="dojox/layout/ContentPane">
-        <table data-dojo-type='dojox/grid/DataGrid' plugins="indirectSelection: headerSelector:true" data-dojo-props="store:orderStore" autoWidth="true" autoHeight="true" selectionMode="single" data-dojo-id="roomGrid" onclick="roomAction.setRoomId" ondblClick="roomAction.dbclickRoomGrid" style="top:30px;">
+    <form id="searchOrderCondition" enctype="multipart/form-data">
+        <div>
+            @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
+
+
+            @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new {@name="", @class = "form-control", @min = "0", @step = "1", @value = 0 } })
+            @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
+        </div>
+        <div>
+
+            @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
+            @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
+            @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
+            @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" id="sendOrderCondition"  onclick="orderAction.SearchOrderByCondition()" value="Search"/>
+        </div>
+
+    </form>
+
+    <div id="orderStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
+    <div>
+        <table data-dojo-type='dojox/grid/DataGrid' plugins="indirectSelection: headerSelector:true" data-dojo-props="store:orderStore" autoWidth="true" onclick="orderAction.setOrderId" ondblClick="orderAction.dbclickOrderGrid"  autoHeight="true" selectionMode="single" data-dojo-id="orderGrid" id="orderGrid" style="top:30px;">
             <thead>
                 <tr>
-                    <th field='room_id'>項次</th>
-                    <th field='category'>客房類型</th>
-                    <th field='name'>客房名稱</th>
-                    <th field='usuakprice'>平日價</th>
-                    <th field='holidayprice'>假日價</th>
-                    <th field='floor'>坪數</th>
-                    <th field='bedtype'>床型</th>
-                    <th field='contents'>內容</th>
+                    <th field='OrderId'>項次</th>
+                    <th field='CustId'>客房類型</th>
+                    <th field='CustName'>客房名稱</th>
+                    <th field='Orderdate'>平日價</th>
+                    <th field='ShippedDate'>假日價</th>
                 </tr>
             </thead>
         </table>

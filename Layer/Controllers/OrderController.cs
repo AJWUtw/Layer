@@ -39,16 +39,39 @@ namespace Layer.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetOrder(eSaleModel.Order condition)
+        {
+            var result = new eSaleModel.Order();
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+
+            result.OrderId = 0;
+            result.CustName = "%"+ null+ "%";
+            result.EmpId = 0;
+            result.ShipperId = 0;
+            result.Orderdate = null;
+            result.RequireDdate = null;
+            result.ShippedDate = null;
+
+            store.identifier = "OrderId";
+            store.items = orderService.GetOrderByCondition(result);
+
+            return this.Json(store, JsonRequestBehavior.AllowGet);
+
+        }
         /// <summary>
         /// 取得訂單資訊
         /// </summary>
         /// <param name="condition">篩選條件</param>
         /// <returns></returns>
         [HttpPost()]
-        public ActionResult GetOrderByCondition(eSaleModel.Order condition)
+        public JsonResult GetOrderByCondition(eSaleModel.Order condition)
         {
             var result = new eSaleModel.Order();
             var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+
             result.OrderId = condition.OrderId;
             result.CustName = "%" + (condition.CustName)+ "%" ;
             result.EmpId = Int32.Parse(condition.EmpName);
@@ -56,10 +79,12 @@ namespace Layer.Controllers
             result.Orderdate = condition.Orderdate;
             result.RequireDdate = condition.RequireDdate;
             result.ShippedDate = condition.ShippedDate;
-            //return result;
 
-            //return Content(condition.CustName, "text/html");
-            return this.Json(orderService.GetOrderByCondition(result), JsonRequestBehavior.AllowGet);
+
+            store.identifier = "OrderId";
+            store.items = orderService.GetOrderByCondition(result);
+
+            return this.Json(store, JsonRequestBehavior.AllowGet);
         }
     }
 }

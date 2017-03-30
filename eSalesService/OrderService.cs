@@ -36,18 +36,14 @@ namespace eSalesService
         
         public List<eSaleModel.Order> GetOrderByCondition(eSaleModel.Order condition)
         {
-            
-
             List<eSaleModel.Order> result = new List<eSaleModel.Order>();
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
             var datalist = orderDao.GetOrderByCondition(condition);
-
-
-            return this.MapEmpNameSelectListItem(datalist);
-
             
+            return this.MapOrderStore(datalist);
+
         }
-        private List<eSaleModel.Order> MapEmpNameSelectListItem(DataTable empData)
+        private List<eSaleModel.Order> MapOrderStore(DataTable empData)
         {
             List<eSaleModel.Order> result = new List<eSaleModel.Order>();
 
@@ -58,8 +54,8 @@ namespace eSalesService
                 {
                     OrderId = (int)row["OrderId"],
                     CustName = row["CompanyName"].ToString(),
-                    Orderdate = row["Orderdate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["Orderdate"],
-                    ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"],
+                    Orderdate = row["Orderdate"] == DBNull.Value ? (DateTime?)null : (DateTime?)row["Orderdate"],
+                    ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime?)row["ShippedDate"],
 
                 });
             }
