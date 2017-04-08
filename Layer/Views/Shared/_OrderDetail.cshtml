@@ -1,0 +1,45 @@
+﻿@model eSaleModel.OrderDetails
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    
+    <div>
+        <h4>OrderDetails</h4>
+        <hr />
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Qty)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Discount)
+            </dt>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+</body>
+</html>

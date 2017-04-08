@@ -19,26 +19,73 @@ namespace Layer.Controllers
             return
                 System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
-        // GET: Order
+        /// GET  Order
         public ActionResult Index()
         {
             eSalesService.OrderService orderService = new eSalesService.OrderService(this.GetDBConnectionString());
             eSalesService.EmpService empService = new eSalesService.EmpService(this.GetDBConnectionString());
+            eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
             eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
 
             var tmp = orderService.GetOrderById("id");
             ViewBag.data = tmp.CustId+" "+tmp.CustName+" "+tmp.OrderId;
             ViewBag.EmpNameData = empService.GetEmpNameData();
+            ViewBag.CustNameData = cusService.GetCusNameData();
             ViewBag.ShipperNameData = shipService.GetShipperNameData();
             return View();
         }
-        [HttpPost()]
-        public ActionResult Index(eSaleModel.Order order)
-        {
 
-            return View();
+        [HttpGet]
+        public JsonResult GetProductList()
+        {
+            var result = new eSaleModel.Product();
+            var productService = new eSalesService.ProductService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+
+            result.ProductId = 0;
+            result.ProductName = "%" + null + "%";
+            result.SupplierId = 0;
+            result.CategoryId = 0;
+            
+            return this.Json(productService.GetProductByCondition(result), JsonRequestBehavior.AllowGet);
+
         }
 
+        [HttpGet]
+        public JsonResult GetProductNameList()
+        {
+            var productService = new eSalesService.ProductService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+
+            store.identifier = "id";
+            store.items = productService.GetProductNameList();
+
+            return this.Json(store, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpGet]
+        public JsonResult GetInsertRow()
+        {
+            List<eSaleModel.Product> item = new List<eSaleModel.Product>();
+            var productService = new eSalesService.ProductService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+            
+            
+            item.Add(new eSaleModel.Product()
+            {
+                ProductName = "Product HHYDP",
+                UnitPrice = (decimal)18.00,
+                ProductId = 1,
+                Count = 1,
+                Sum = 1
+            });
+            
+
+            store.identifier = "ProductId";
+            store.items = item;
+            return this.Json(store, JsonRequestBehavior.AllowGet);
+
+        }
         [HttpGet]
         public JsonResult GetOrder(eSaleModel.Order condition)
         {
@@ -47,7 +94,7 @@ namespace Layer.Controllers
             var store = new eSaleModel.Store();
 
             result.OrderId = 0;
-            result.CustName = "%"+ null+ "%";
+            result.CustName = "%" + null + "%";
             result.EmpId = 0;
             result.ShipperId = 0;
             result.Orderdate = null;
@@ -56,8 +103,7 @@ namespace Layer.Controllers
 
             store.identifier = "OrderId";
             store.items = orderService.GetOrderByCondition(result);
-
-            return this.Json(store, JsonRequestBehavior.AllowGet);
+            return this.Json(store, JsonRequestBehavior.AllowGet );
 
         }
         /// <summary>
@@ -86,5 +132,85 @@ namespace Layer.Controllers
 
             return this.Json(store, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 新增訂單資訊
+        /// </summary>
+        /// <param name="orderData">訂單資訊</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult InsertOrder(eSaleModel.Order orderData)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            try
+            {
+                var result = new eSaleModel.Order();
+                
+                result.CustId = Int32.Parse(orderData.CustName);
+                result.EmpId = Int32.Parse(orderData.EmpName);
+                result.Orderdate = orderData.Orderdate;
+                result.RequireDdate = orderData.RequireDdate;
+                result.ShippedDate = orderData.ShippedDate;
+                result.ShipperId = Int32.Parse(orderData.ShipperName);
+                result.Freight = orderData.Freight;
+                result.ShipCountry = orderData.ShipCountry;
+                result.ShipCity = orderData.ShipCity;
+                result.ShipRegion = orderData.ShipRegion;
+                result.ShipPostalCode = orderData.ShipPostalCode;
+                result.ShipAddress = orderData.ShipAddress;
+
+                int orderId = orderService.InsertOrder(result);
+                return this.Json(orderId, JsonRequestBehavior.AllowGet);
+            }catch (Exception)
+            {
+
+                return this.Json(false, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+        /// <summary>
+        /// 新增訂單明細
+        /// </summary>
+        /// <param name="data">訂單明細</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult InsertOrderDetail(eSaleModel.ViewModel.ProductDetailWithId data)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            try
+            {
+                //orderService.InsertOrderDetail(data);
+
+                eSaleModel.OrderDetails orderDetail = new eSaleModel.OrderDetails();
+                //productDetail = data.items[0];
+                orderDetail.OrderId = data.id;
+                orderDetail.ProductId = Convert.ToInt16( data.items[0].ProductName[0]);
+                orderDetail.UnitPrice = data.items[0].UnitPrice[0];
+                orderDetail.Qty = data.items[0].Qty[0];
+                orderService.InsertOrderDetail(orderDetail);
+                if (data.items.Count > 1)
+                {
+                    for (int i = 1; i < data.items.Count; i++)
+                    {
+                        var orderService2 = new eSalesService.OrderService(this.GetDBConnectionString());
+                        eSaleModel.OrderDetails orderDetail2 = new eSaleModel.OrderDetails();
+                        orderDetail2.OrderId = data.id;
+                        orderDetail2.ProductId = Convert.ToInt16(data.items[0]._S._arrayOfAllItems[i].ProductName[0]);
+                        orderDetail2.UnitPrice = data.items[0]._S._arrayOfAllItems[i].UnitPrice[0];
+                        orderDetail2.Qty = data.items[0]._S._arrayOfAllItems[i].Qty[0];
+                        orderService2.InsertOrderDetail(orderDetail2);
+                    }
+                }
+
+
+                return this.Json(true);
+            }
+            catch (Exception e)
+            {
+                var ee = e;
+
+                return this.Json(false);
+            }
+        }
+
     }
 }

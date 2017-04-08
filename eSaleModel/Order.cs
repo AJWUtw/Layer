@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace eSaleModel
         /// <summary>
         /// 客戶代號
         /// </summary>
-        public string CustId { get; set; }
+        public int CustId { get; set; }
 
         /// <summary>
         /// 客戶名稱
@@ -52,6 +53,20 @@ namespace eSaleModel
         public DateTime? ShippedDate { get; set; }
 
         /// <summary>
+        /// 訂單日期
+        /// </summary>
+        public string O_Orderdate { get; set; }
+
+        /// <summary>
+        /// 需要日期
+        /// </summary>
+        public string O_RequireDdate { get; set; }
+
+        /// <summary>
+        /// 出貨日期
+        /// </summary>
+        public string O_ShippedDate { get; set; }
+        /// <summary>
         /// 出貨公司代號
         /// </summary>
         public int ShipperId { get; set; }
@@ -61,10 +76,11 @@ namespace eSaleModel
         /// </summary>
         public string ShipperName { get; set; }
 
+        [Range(0, double.MaxValue)]
         /// <summary>
         /// 運費
         /// </summary>
-        public double Freight { get; set; }
+        public decimal Freight { get; set; }
 
         /// <summary>
         /// 出貨說明

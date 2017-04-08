@@ -1,9 +1,5 @@
 ﻿@model eSaleModel.Order
 
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 
 <html>
@@ -18,6 +14,8 @@
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/claroGrid.css" />
 
     <script src="~/Scripts/order.js"></script>
+    <script src="~/Scripts/grid.js"></script>
+    
     <title>Index</title>
 </head>
 <body class="claro">
@@ -27,114 +25,14 @@
         <form id="searchOrderCondition" enctype="multipart/form-data">
             <table>
                 <tr>
-                    <div>
-
-                        <th>
-                            @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @name = "", @class = "form-control", @min = "0", @step = "1", @value = 0 } })
-                            @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
-                        </th>
-                    </div>
+                    <th>
+                        @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </th>
+                    <th>
+                        @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @name = "", @class = "form-control", @min = "0", @step = "1", @value = 0 } })
+                        @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
+                    </th>
                 </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
-                        </th>
-                    </div>
-                </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData)
-                        </th>
-                    </div>
-                </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
-                        </th>
-                    </div>
-                </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
-                            @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
-                        </th>
-                    </div>
-                </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
-                            @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
-                        </th>
-                    </div>
-                </tr>
-                <tr>
-                    <div>
-                        <th>
-                            @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        </th>
-                        <th>
-                            @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
-                            @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
-                        </th>
-                    </div>
-                </tr>
-            </table>
-
-            <span data-dojo-type="dijit/form/Button" id="sendOrderCondition" onclick="orderAction.SearchOrderByCondition()">查詢</span>
-
-            <span data-dojo-type="dijit/form/Button" id="insertOrder" onclick="InsertDialog.show();">新增</span>
-
-        </form>
-
-
-        <!--Search Result Grid-->
-
-        <div id="orderStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
-        <div>
-            <table data-dojo-type='dojox/grid/DataGrid' plugins="indirectSelection: headerSelector:true" data-dojo-props="store:orderStore" autoWidth="true" onclick="orderAction.setOrderId" ondblClick="orderAction.dbclickOrderGrid" autoHeight="true" selectionMode="single" data-dojo-id="orderGrid" id="orderGrid" style="top:30px;">
-                <thead>
-                    <tr>
-                        <th field='OrderId'>訂單編號</th>
-                        <th field='CustName'>客戶名稱</th>
-                        <th field='Orderdate'>訂購日期</th>
-                        <th field='ShippedDate'>發貨日期</th>
-                        <th formatter="button"><span data-dojo-type="dijit/form/Button" id="updateOrder" onclick="console.log('修改')">修改</span></th>
-                        <th><span data-dojo-type="dijit/form/Button" id="deleteOrder" onclick="console.log('刪除')">刪除</span></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-
-
-
-    <div data-dojo-type="dijit/Dialog" data-dojo-id="InsertDialog" title="新增訂單">
-        <form id="searchOrderCondition" enctype="multipart/form-data">
-            <table>
                 <tr>
                     <th>
                         @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -154,12 +52,22 @@
                 </tr>
                 <tr>
                     <th>
+                        @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </th>
+                    <th>
+                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
+                    </th>
+                </tr>
+                <tr>
+                    <th>
                         @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
                     <th>
                         @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
                         @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
                     </th>
+                </tr>
+                <tr>
                     <th>
                         @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
@@ -177,89 +85,167 @@
                         @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
                     </th>
                 </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipCountry, "", new { @class = "text-danger" })
-                    </th>
-                    <th>
-                        @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipCity, "", new { @class = "text-danger" })
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipRegion, "", new { @class = "text-danger" })
-                    </th>
-                    <th>
-                        @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipPostalCode, "", new { @class = "text-danger" })
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
-                    </th>
-                    <th>
-                        @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        訂單金額總計
-                    </th>
-                    <th>
-                        <div id="orderSum"></div>
-                    </th>
-                </tr>
-                <tr>
-                    
-                </tr>
             </table>
-            <div class="dijitDialogPaneActionBar">
-                <span data-dojo-type="dijit/form/Button" id="insertOrderBtn" onclick="orderAction.InserOrder()">新增</span>
-                <span data-dojo-type="dijit/form/Button" onclick="InsertDialog.close();">回上一頁</span>
-            </div>
+
+            <span data-dojo-type="dijit/form/Button" id="sendOrderCondition" onclick="orderAction.SearchOrderByCondition()">查詢</span>
+
+            <span data-dojo-type="dijit/form/Button" id="insertOrder" onclick="InsertDialog.show();">新增</span>
+
         </form>
 
+        <script>
+            
+        </script>
+        <!--Search Result Grid-->
+
+        <div id="orderStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
+        <div>
+            <table dojoType="dojox/grid/DataGrid" id="orderGrid" data-dojo-id="orderGrid" columnReordering="true" sortFields="['OrderId','CustName','O_Orderdate','O_ShippedDate']" store="orderStore" onclick="orderAction.setOrderId"  clientSort="true" selectionMode="single" autoHeight="true" autoWidth="true" rowHeight="25" noDataMessage="<span class='dojoxGridNoData'>No students found</span>" structure=searchStructure></table>
+        </div>
+    </div>
+
+
+    <!--新增訂單-->
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="InsertDialog" title="新增訂單">
+        <div class="dijitDialogPaneContentArea">
+            <form id="insertOrderForm" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.DropDownListFor(model => model.CustName, (List<SelectListItem>)ViewBag.CustNameData)
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData)
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
+                            @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
+                            @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
+                            @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipCountry, "", new { @class = "text-danger" })
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipCity, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipRegion, "", new { @class = "text-danger" })
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipPostalCode, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </th>
+                        <th>
+                            @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
+                        </th>
+                    </tr>
+
+                </table>
+            </form>
+            訂單金額總計 <span id="Total"></span> 元
+            <br />
+            <span data-dojo-type="dijit/form/Button" onclick="gridAction.AddInsertProductRow();">+新增商品</span>
+
+            <div id="inserProductGrid" data-dojo-id="inserProductGrid"></div>
+
+            <div class="dijitDialogPaneActionBar">
+                <span data-dojo-type="dijit/form/Button" id="insertOrderBtn" onclick="orderAction.InserOrder()">新增</span>
+                <span data-dojo-type="dijit/form/Button" onclick="InsertDialog.hide();">回上一頁</span>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!--修改訂單-->
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="UpdateDialog" title="新增訂單">
+        <form id="updateOrderForm" enctype="multipart/form-data">
+            
+        </form>
+        <form></form>
+
+        <div class="dijitDialogPaneActionBar">
+            <span data-dojo-type="dijit/form/Button" id="updateOrderBtn" onclick="orderAction.UpdateOrder()">修改</span>
+            <span data-dojo-type="dijit/form/Button" onclick="UpdateDialog.hide();">回上一頁</span>
+        </div>
     </div>
 </body>
 </html>

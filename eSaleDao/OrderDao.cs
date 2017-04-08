@@ -33,7 +33,7 @@ namespace eSaleDao
         {
             
             return new eSaleModel.Order()
-            { OrderId = 001, CustId = "C002", CustName = "王小明" };
+            { OrderId = 001, CustId = 001, CustName = "王小明" };
         }
 
         public DataTable GetOrderByCondition(eSaleModel.Order condition)
@@ -47,7 +47,6 @@ namespace eSaleDao
                                                             (Orderdate=@Orderdate OR @Orderdate = '1780-01-01' ) AND
                                                             (RequiredDate=@RequireDdate OR @RequireDdate = '1780-01-01' ) AND
                                                             (ShippedDate=@ShippedDate OR @ShippedDate = '1780-01-01' ) ";
-
             using (SqlConnection conn = new SqlConnection(this.DbConn))
             {
                 conn.Open();
@@ -62,6 +61,76 @@ namespace eSaleDao
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 sqlAdapter.Fill(dt);
                 conn.Close();
+            }
+            return dt;
+        }
+        public int InsertOrder(eSaleModel.Order order)
+        {
+            string sql = @" Insert INTO Sales.Orders
+                        (
+							CustomerID,EmployeeID,orderdate,requireddate,shippeddate,shipperid,freight,
+							shipname,shipaddress,shipcity,shipregion,shippostalcode,shipcountry
+						)
+                    OUTPUT INSERTED.OrderID 
+						VALUES
+						(
+							@CustomerID,@EmployeeID,@Orderdate,@Requireddate,@Shippeddate,@Shipperid,@Freight,
+							@Shipname,@Shipaddress,@Shipcity,@Shipregion,@Shippostalcode,@Shipcountry
+						)
+						";
+            int orderId;
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
+                cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
+                cmd.Parameters.Add(new SqlParameter("@Orderdate", order.Orderdate));
+                cmd.Parameters.Add(new SqlParameter("@RequireDdate", order.RequireDdate));
+                cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
+                cmd.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
+                cmd.Parameters.Add(new SqlParameter("@Freight", order.Freight));
+                cmd.Parameters.Add(new SqlParameter("@Shipname", "aa"));
+                cmd.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
+                cmd.Parameters.Add(new SqlParameter("@ShipCity", order.ShipCity));
+                cmd.Parameters.Add(new SqlParameter("@ShipRegion", order.ShipRegion));
+                cmd.Parameters.Add(new SqlParameter("@ShipPostalCode", order.ShipPostalCode));
+                cmd.Parameters.Add(new SqlParameter("@ShipCountry", order.ShipCountry));
+
+                Console.WriteLine(cmd);
+                object aa = cmd.ExecuteScalar();
+                orderId = Convert.ToInt32(aa);
+
+                conn.Close();
+            }
+            return orderId;
+
+        }
+
+        public DataTable InsertOrderDetail(eSaleModel.OrderDetails orderDetail)
+        {
+            DataTable dt = new DataTable();
+            string sql = @" Insert INTO Sales.OrderDetails
+						 (
+							OrderID,ProductID,UnitPrice,Qty,Discount
+						)
+						VALUES
+						(
+							@OrderID,@ProductID,@UnitPrice,@Qty,@Discount
+						)
+						";
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderId", orderDetail.OrderId));
+                cmd.Parameters.Add(new SqlParameter("@ProductID", orderDetail.ProductId));
+                cmd.Parameters.Add(new SqlParameter("@UnitPrice", orderDetail.UnitPrice));
+                cmd.Parameters.Add(new SqlParameter("@Qty", orderDetail.Qty));
+                cmd.Parameters.Add(new SqlParameter("@Discount", orderDetail.Discount == null ? 0 : orderDetail.Discount));
+                //SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                //sqlAdapter.Fill(dt);
+                cmd.ExecuteNonQuery();
             }
             return dt;
         }

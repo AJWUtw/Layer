@@ -54,12 +54,36 @@ namespace eSalesService
                 {
                     OrderId = (int)row["OrderId"],
                     CustName = row["CompanyName"].ToString(),
-                    Orderdate = row["Orderdate"] == DBNull.Value ? (DateTime?)null : (DateTime?)row["Orderdate"],
-                    ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime?)row["ShippedDate"],
+                    O_Orderdate = row["Orderdate"].ToString(),
+                    O_ShippedDate = row["ShippedDate"].ToString(),
 
                 });
             }
             return result;
         }
+        /// <summary>
+        /// 依訂單id取得訂單資料
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int InsertOrder(eSaleModel.Order data)
+        {
+            eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
+            return orderDao.InsertOrder(data);
+        }
+
+        /// <summary>
+        /// 依訂單id取得訂單資料
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public void InsertOrderDetail(eSaleModel.OrderDetails data)
+        {
+            eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
+            orderDao.InsertOrderDetail(data);
+            
+        }
+
+
     }
 }
