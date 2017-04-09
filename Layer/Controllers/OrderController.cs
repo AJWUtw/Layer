@@ -27,12 +27,47 @@ namespace Layer.Controllers
             eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
             eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
 
-            var tmp = orderService.GetOrderById("id");
-            ViewBag.data = tmp.CustId+" "+tmp.CustName+" "+tmp.OrderId;
+            
             ViewBag.EmpNameData = empService.GetEmpNameData();
             ViewBag.CustNameData = cusService.GetCusNameData();
             ViewBag.ShipperNameData = shipService.GetShipperNameData();
             return View();
+        }
+
+
+        [HttpGet]
+        public ActionResult GetUpdateDialog(int id)
+        {
+
+
+            eSalesService.OrderService orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            eSalesService.EmpService empService = new eSalesService.EmpService(this.GetDBConnectionString());
+            eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
+            eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
+            eSaleModel.Order orderData = new eSaleModel.Order();
+
+            orderData = orderService.GetOrderById(id);
+
+            ViewBag.OrderId = orderData.OrderId;
+            ViewBag.Orderdate = orderData.Orderdate;
+            ViewBag.RequiredDate = orderData.RequiredDate;
+            ViewBag.ShippedDate = orderData.ShippedDate;
+            ViewBag.Freight = orderData.Freight;
+            ViewBag.ShipCountry = orderData.ShipCountry;
+            ViewBag.ShipCity = orderData.ShipCity;
+            ViewBag.ShipRegion = orderData.ShipRegion;
+            ViewBag.ShipPostalCode = orderData.ShipPostalCode;
+            ViewBag.ShipAddress = orderData.ShipAddress;
+            ViewBag.ShipName = orderData.ShipAddress;
+
+            //ViewBag.OrderId = "updateProductGrid" + id;
+
+            ViewBag.EmpNameData = new SelectList(empService.GetEmpNameData(), "Value", "Text", orderData.EmpId);
+            ViewBag.CustNameData = new SelectList(cusService.GetCusNameData(), "Value", "Text", orderData.CustId);
+            ViewBag.ShipperNameData = new SelectList(shipService.GetShipperNameData(), "Value", "Text", orderData.ShipperId);
+
+            return PartialView();
+
         }
 
         [HttpGet]
@@ -98,13 +133,36 @@ namespace Layer.Controllers
             result.EmpId = 0;
             result.ShipperId = 0;
             result.Orderdate = null;
-            result.RequireDdate = null;
+            result.RequiredDate = null;
             result.ShippedDate = null;
 
             store.identifier = "OrderId";
             store.items = orderService.GetOrderByCondition(result);
             return this.Json(store, JsonRequestBehavior.AllowGet );
 
+        }
+
+        [HttpGet]
+        public JsonResult GetOrderById(int id)
+        {
+            var result = new eSaleModel.Order();
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            
+            result = orderService.GetOrderById(id);
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetOrderDetailById(int id)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            var store = new eSaleModel.Store();
+            
+            store.identifier = "ProductName";
+            store.items = orderService.GetOrderDetailById(id);
+
+            return this.Json(store, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 取得訂單資訊
@@ -123,7 +181,7 @@ namespace Layer.Controllers
             result.EmpId = Int32.Parse(condition.EmpName);
             result.ShipperId = Int32.Parse(condition.ShipperName);
             result.Orderdate = condition.Orderdate;
-            result.RequireDdate = condition.RequireDdate;
+            result.RequiredDate = condition.RequiredDate;
             result.ShippedDate = condition.ShippedDate;
 
 
@@ -148,7 +206,7 @@ namespace Layer.Controllers
                 result.CustId = Int32.Parse(orderData.CustName);
                 result.EmpId = Int32.Parse(orderData.EmpName);
                 result.Orderdate = orderData.Orderdate;
-                result.RequireDdate = orderData.RequireDdate;
+                result.RequiredDate = orderData.RequiredDate;
                 result.ShippedDate = orderData.ShippedDate;
                 result.ShipperId = Int32.Parse(orderData.ShipperName);
                 result.Freight = orderData.Freight;
@@ -200,6 +258,126 @@ namespace Layer.Controllers
                         orderService2.InsertOrderDetail(orderDetail2);
                     }
                 }
+
+
+                return this.Json(true);
+            }
+            catch (Exception e)
+            {
+                var ee = e;
+
+                return this.Json(false);
+            }
+        }
+
+        /// <summary>
+        /// 新增訂單資訊
+        /// </summary>
+        /// <param name="orderData">訂單資訊</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult UpdateOrder(eSaleModel.Order orderData)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            try
+            {
+                var result = new eSaleModel.Order();
+
+                result.OrderId = orderData.OrderId;
+                result.CustId = Int32.Parse(orderData.CustName);
+                result.EmpId = Int32.Parse(orderData.EmpName);
+                result.Orderdate = orderData.Orderdate;
+                result.RequiredDate = orderData.RequiredDate;
+                result.ShippedDate = orderData.ShippedDate;
+                result.ShipperId = Int32.Parse(orderData.ShipperName);
+                result.Freight = orderData.Freight;
+                result.ShipCountry = orderData.ShipCountry;
+                result.ShipCity = orderData.ShipCity;
+                result.ShipRegion = orderData.ShipRegion;
+                result.ShipPostalCode = orderData.ShipPostalCode;
+                result.ShipAddress = orderData.ShipAddress;
+                result.ShipName = orderData.ShipName;
+
+                var aa = orderService.UpdateOrder(result);
+                return this.Json(aa, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+
+                return this.Json(false, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        /// <summary>
+        /// 新增訂單明細
+        /// </summary>
+        /// <param name="data">訂單明細</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult UpdateOrderDetail(eSaleModel.ViewModel.ProductDetailWithId data)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            try
+            {
+                //orderService.InsertOrderDetail(data);
+
+                eSaleModel.OrderDetails orderDetail = new eSaleModel.OrderDetails();
+                //productDetail = data.items[0];
+                orderDetail.OrderId = data.id;
+                orderService.DeleteOrderDetail(orderDetail);
+                if (data.items.Count > 0)
+                {
+                    orderDetail.ProductId = Convert.ToInt16(data.items[0].ProductName[0]);
+                    orderDetail.UnitPrice = data.items[0].UnitPrice[0];
+                    orderDetail.Qty = data.items[0].Qty[0];
+                    orderService.InsertOrderDetail(orderDetail);
+                }
+                    
+                if (data.items.Count > 1)
+                {
+                    for (int i = data.items[0]._S._arrayOfAllItems.Count-1 ; i > (data.items[0]._S._arrayOfAllItems.Count - data.items.Count) ; i--)
+                    {
+                        var orderService2 = new eSalesService.OrderService(this.GetDBConnectionString());
+                        eSaleModel.OrderDetails orderDetail2 = new eSaleModel.OrderDetails();
+                        orderDetail2.OrderId = data.id;
+                        orderDetail2.ProductId = Convert.ToInt16(data.items[0]._S._arrayOfAllItems[i].ProductName[0]);
+                        orderDetail2.UnitPrice = data.items[0]._S._arrayOfAllItems[i].UnitPrice[0];
+                        orderDetail2.Qty = data.items[0]._S._arrayOfAllItems[i].Qty[0];
+                        orderService2.InsertOrderDetail(orderDetail2);
+                    }
+                }
+
+
+                return this.Json(true);
+            }
+            catch (Exception e)
+            {
+                var ee = e;
+
+                return this.Json(false);
+            }
+        }
+
+
+        /// <summary>
+        /// 新增訂單明細
+        /// </summary>
+        /// <param name="data">訂單明細</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult DeleteOrder(eSaleModel.ViewModel.ProductDetailWithId data)
+        {
+            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            try
+            {
+                //orderService.InsertOrderDetail(data);
+
+                eSaleModel.OrderDetails orderDetail = new eSaleModel.OrderDetails();
+                //productDetail = data.items[0];
+                orderDetail.OrderId = data.id;
+
+                orderService.DeleteOrderDetail(orderDetail);
+                orderService.DeleteOrder(orderDetail);
 
 
                 return this.Json(true);

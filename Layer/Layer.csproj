@@ -271,6 +271,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\_OrderDetail.cshtml" />
+    <Content Include="Views\Order\GetUpdateDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

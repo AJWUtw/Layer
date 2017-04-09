@@ -1,0 +1,115 @@
+﻿@model eSaleModel.Order
+
+<form id="updateOrderForm" enctype="multipart/form-data">
+    @Html.TextBoxFor(model => model.OrderId, new { @class = "hidden", @Value = ViewBag.OrderId })
+    <table>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.DropDownListFor(model => model.CustName, (SelectList)ViewBag.CustNameData)
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.DropDownListFor(model => model.EmpName, (SelectList)ViewBag.EmpNameData)
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.TextBoxFor(model => model.Orderdate, new { @type = "date", @Value = ViewBag.Orderdate.ToString("yyyy-MM-dd") })
+                @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
+            </th>
+            <th>
+                @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.TextBoxFor(model => model.RequiredDate, new { @type = "date", @Value = ViewBag.RequiredDate.ToString("yyyy-MM-dd") })
+                @Html.ValidationMessageFor(model => model.RequiredDate, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date", @Value = ViewBag.ShippedDate.ToString("yyyy-MM-dd") })
+                @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.DropDownListFor(model => model.ShipperName, (SelectList)ViewBag.ShipperNameData)
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.Freight } })
+                @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipCountry } })
+                @Html.ValidationMessageFor(model => model.ShipCountry, "", new { @class = "text-danger" })
+            </th>
+            <th>
+                @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipCity } })
+                @Html.ValidationMessageFor(model => model.ShipCity, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipRegion } })
+                @Html.ValidationMessageFor(model => model.ShipRegion, "", new { @class = "text-danger" })
+            </th>
+            <th>
+                @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipPostalCode } })
+                @Html.ValidationMessageFor(model => model.ShipPostalCode, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipAddress } })
+                @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
+            </th>
+            <th>
+                @Html.LabelFor(model => model.ShipName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </th>
+            <th>
+                @Html.EditorFor(model => model.ShipName, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.ShipName } })
+                @Html.ValidationMessageFor(model => model.ShipName, "", new { @class = "text-danger" })
+            </th>
+        </tr>
+
+    </table>
+</form>
+            

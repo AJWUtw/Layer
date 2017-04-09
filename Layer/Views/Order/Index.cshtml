@@ -1,5 +1,4 @@
 ﻿@model eSaleModel.Order
-
 <!DOCTYPE html>
 
 <html>
@@ -13,8 +12,8 @@
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/Grid.css" />
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/claroGrid.css" />
 
-    <script src="~/Scripts/order.js"></script>
     <script src="~/Scripts/grid.js"></script>
+    <script src="~/Scripts/order.js"></script>
     
     <title>Index</title>
 </head>
@@ -69,11 +68,11 @@
                 </tr>
                 <tr>
                     <th>
-                        @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
                     <th>
-                        @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
-                        @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.RequiredDate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
+                        @Html.ValidationMessageFor(model => model.RequiredDate, "", new { @class = "text-danger" })
                     </th>
                 </tr>
                 <tr>
@@ -93,12 +92,9 @@
 
         </form>
 
-        <script>
-            
-        </script>
         <!--Search Result Grid-->
 
-        <div id="orderStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
+        <div id="orderStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
         <div>
             <table dojoType="dojox/grid/DataGrid" id="orderGrid" data-dojo-id="orderGrid" columnReordering="true" sortFields="['OrderId','CustName','O_Orderdate','O_ShippedDate']" store="orderStore" onclick="orderAction.setOrderId"  clientSort="true" selectionMode="single" autoHeight="true" autoWidth="true" rowHeight="25" noDataMessage="<span class='dojoxGridNoData'>No students found</span>" structure=searchStructure></table>
         </div>
@@ -135,11 +131,11 @@
                             @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
                         </th>
                         <th>
-                            @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
                         </th>
                         <th>
-                            @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
-                            @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.RequiredDate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
+                            @Html.ValidationMessageFor(model => model.RequiredDate, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
@@ -237,14 +233,29 @@
 
     <!--修改訂單-->
     <div data-dojo-type="dijit/Dialog" data-dojo-id="UpdateDialog" title="新增訂單">
-        <form id="updateOrderForm" enctype="multipart/form-data">
-            
-        </form>
-        <form></form>
+        <div class="dijitDialogPaneContentArea">
+            <div id="test"></div>
+            訂單金額總計 <span id="updateTotal"></span> 元
+            <br />
+            <span data-dojo-type="dijit/form/Button" onclick="gridAction.AddUpdateProductRow()">+新增商品</span>
 
-        <div class="dijitDialogPaneActionBar">
-            <span data-dojo-type="dijit/form/Button" id="updateOrderBtn" onclick="orderAction.UpdateOrder()">修改</span>
-            <span data-dojo-type="dijit/form/Button" onclick="UpdateDialog.hide();">回上一頁</span>
+            <div id="updateProductGrid" data-dojo-id="updateProductGrid"></div>
+
+            <div class="dijitDialogPaneActionBar">
+                <span data-dojo-type="dijit/form/Button" id="updateOrderBtn" onclick="orderAction.UpdateOrder()">修改</span>
+                <span data-dojo-type="dijit/form/Button" onclick="UpdateDialog.hide();">回上一頁</span>
+            </div>
+        </div>
+    </div>
+
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="DeleteDialog" title="新增訂單">
+        <div class="dijitDialogPaneContentArea">
+            是否刪除
+            <div id="DeleteDialogContent"></div>
+            <div class="dijitDialogPaneActionBar">
+                <span data-dojo-type="dijit/form/Button" id="deleteOrderBtn" onclick="orderAction.DeleteOrder()">刪除</span>
+                <span data-dojo-type="dijit/form/Button" onclick="DeleteDialog.hide();">取消</span>
+            </div>
         </div>
     </div>
 </body>

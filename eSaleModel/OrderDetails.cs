@@ -22,6 +22,11 @@ namespace eSaleModel
         public int ProductId { get; set; }
 
         /// <summary>
+        /// 商品名稱
+        /// </summary>
+        public int ProductName { get; set; }
+
+        /// <summary>
         /// 單價
         /// </summary>
         public decimal UnitPrice { get; set; }
@@ -29,11 +34,16 @@ namespace eSaleModel
         /// <summary>
         /// 數量
         /// </summary>
-        public decimal Qty { get; set; }
+        public int Qty { get; set; }
 
         /// <summary>
         /// 折扣
         /// </summary>
         public int Discount { get; set; }
+
+        /// <summary>
+        /// 小計
+        /// </summary>
+        public decimal Sum { get; set; }
     }
 }

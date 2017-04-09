@@ -45,7 +45,7 @@ namespace eSaleModel
         /// <summary>
         /// 需要日期
         /// </summary>
-        public DateTime? RequireDdate { get; set; }
+        public DateTime? RequiredDate { get; set; }
 
         /// <summary>
         /// 出貨日期
@@ -60,7 +60,7 @@ namespace eSaleModel
         /// <summary>
         /// 需要日期
         /// </summary>
-        public string O_RequireDdate { get; set; }
+        public string O_RequiredDate { get; set; }
 
         /// <summary>
         /// 出貨日期
