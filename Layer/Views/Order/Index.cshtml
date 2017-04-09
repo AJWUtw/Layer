@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/form/resources/CheckedMultiSelect.css" />
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/Grid.css" />
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/resources/claroGrid.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/enhanced/resources/claroEnhancedGrid.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css" />
 
     <script src="~/Scripts/grid.js"></script>
     <script src="~/Scripts/order.js"></script>
@@ -92,12 +94,13 @@
 
         </form>
 
+        <div id="gridDiv" data-dojo-id="gridDiv" ></div>
         <!--Search Result Grid-->
 
-        <div id="orderStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
+        @*<div id="orderStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props="url:'./GetOrder',cleadOnClose:true" data-dojo-id="orderStore"></div>
         <div>
-            <table dojoType="dojox/grid/DataGrid" id="orderGrid" data-dojo-id="orderGrid" columnReordering="true" sortFields="['OrderId','CustName','O_Orderdate','O_ShippedDate']" store="orderStore" onclick="orderAction.setOrderId"  clientSort="true" selectionMode="single" autoHeight="true" autoWidth="true" rowHeight="25" noDataMessage="<span class='dojoxGridNoData'>No students found</span>" structure=searchStructure></table>
-        </div>
+            <table dojoType="dojox/grid/DataGrid" id="orderGrid" data-dojo-id="orderGrid" pagingLinks=false pagingTextBox=true firstLastArrows=true minRowsPerPage=5 rowsPerPage="15" pageSizeOptions="[10, 15, 25]" columnReordering="true" sortFields="['OrderId','CustName','O_Orderdate','O_ShippedDate']" store="orderStore" onclick="orderAction.setOrderId"  clientSort="true" selectionMode="single" autoHeight="true" autoWidth="true" rowHeight="25" noDataMessage="<span class='dojoxGridNoData'>No students found</span>" structure=searchStructure></table>
+        </div>*@
     </div>
 
 

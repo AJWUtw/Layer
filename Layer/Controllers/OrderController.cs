@@ -328,7 +328,7 @@ namespace Layer.Controllers
                 if (data.items.Count > 0)
                 {
                     orderDetail.ProductId = Convert.ToInt16(data.items[0].ProductName[0]);
-                    orderDetail.UnitPrice = data.items[0].UnitPrice[0];
+                    orderDetail.UnitPrice = (decimal)data.items[0].UnitPrice[0];
                     orderDetail.Qty = data.items[0].Qty[0];
                     orderService.InsertOrderDetail(orderDetail);
                 }
@@ -341,7 +341,7 @@ namespace Layer.Controllers
                         eSaleModel.OrderDetails orderDetail2 = new eSaleModel.OrderDetails();
                         orderDetail2.OrderId = data.id;
                         orderDetail2.ProductId = Convert.ToInt16(data.items[0]._S._arrayOfAllItems[i].ProductName[0]);
-                        orderDetail2.UnitPrice = data.items[0]._S._arrayOfAllItems[i].UnitPrice[0];
+                        orderDetail2.UnitPrice = Convert.ToInt16(data.items[0]._S._arrayOfAllItems[i].UnitPrice[0]);
                         orderDetail2.Qty = data.items[0]._S._arrayOfAllItems[i].Qty[0];
                         orderService2.InsertOrderDetail(orderDetail2);
                     }

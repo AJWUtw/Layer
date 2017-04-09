@@ -3,23 +3,28 @@
 var searchStructure = [
                             {
                                 name: "訂單編號",
-                                field: "OrderId"
+                                field: "OrderId",
+                                width: 'auto'
                             },
                             {
                                 name: "客戶名稱",
-                                field: "CustName"
+                                field: "CustName",
+                                width: 'auto'
                             },
                             {
                                 name: "訂購日期",
-                                field: "O_Orderdate"
+                                field: "O_Orderdate",
+                                width: 'auto'
                             },
                             {
                                 name: "發貨日期",
-                                field: "O_ShippedDate"
+                                field: "O_ShippedDate",
+                                width: 'auto'
                             },
                             {
                                 name: "修改",
                                 field: "OrderId",
+                                width: '80px',
                                 formatter: function (item) {
                                     var btn = new dijit.form.Button({
                                         label: "Edit",
@@ -34,6 +39,7 @@ var searchStructure = [
                             {
                                 name: "刪除",
                                 field: "OrderId",
+                                width: '80px',
                                 formatter: function (item,rowIndex) {
                                     var btn = new dijit.form.Button({
                                         label: "Delete",
@@ -359,40 +365,46 @@ require([
         }
     });
 });
-
-
+var orderGrid;
+var orderStore;
 require([
     "dojo/dom",
-    "dojox/grid/DataGrid",
-    "dojox/grid/cells",
-    "dojox/grid/cells/dijit",
     "dojo/data/ItemFileWriteStore",
-    "dojo/currency",
-    "dijit/form/CurrencyTextBox",
-    "dojo/_base/xhr",
-    "dijit/form/NumberSpinner",
-    "dijit/form/FilteringSelect",
+    "dojox/grid/EnhancedGrid",
+    "dojox/grid/enhanced/plugins/Pagination",
     "dojo/domReady!"
-], function (dom, DataGrid, cells, cellsDijit, ItemFileWriteStore, currency,
-             CurrencyTextBox, xhr, NumberSpinner, FilteringSelect) {
-    var grid, gridLayout;
-    function formatCurrency(inDatum) {
-        return isNaN(inDatum) ? '...' : currency.format(inDatum, this.constraint);
-    }
-    function formatDate(inDatum) {
-        return locale.format(new Date(inDatum), this.constraint);
-    }
-    xhr.get({
-        url: "/Order/GetProductList",
-        handleAs: "json",
-        load: function (jsonData) {
-            
-        },
-        error: function (e) {
-            console.log(e);
-        }
-    });
+], function (dom, ItemFileWriteStore, EnhancedGrid, Pagination) {
+    
+    
+    orderStore = new ItemFileWriteStore({ url: './GetOrder' });
 
+    /*set up layout*/
+    /*create a new grid:*/
+    orderGrid = new EnhancedGrid({
+        id: 'grid',
+        store: orderStore,
+        structure: searchStructure,
+        rowSelector: '20px',
+        autoHeight:"true",
+        Width: "100%",
+        rowWidth: "100%",
+        plugins: {
+            pagination: {
+                pageSizes: ["25", "50", "100", "All"],
+                description: true,
+                sizeSwitch: true,
+                pageStepper: true,
+                gotoButton: true,
+                maxPageStep: 4,
+                position: "bottom"
+            }
+        },
+        onClick: function (evt, rowIndex) {
+            orderAction.setOrderId();
+        }
+    }, gridDiv);
+
+    orderGrid.startup();
 });
 
 
@@ -475,7 +487,6 @@ function GridAction() {
                                         updateProductStore.deleteItem(item);
                                     }
                                 });
-                                
                                 xhr.get({
                                     url: "/Order/GetOrderDetailById?id=" + orderId,
                                     handleAs: "text",
@@ -483,25 +494,19 @@ function GridAction() {
                                         var orderProduct = JSON.parse(jsonData);
                                         for (var i in orderProduct.items) {
                                             updateProductGrid.store.newItem(orderProduct.items[i]);
-                                            
                                         }
-                                        console.log(updateProductGrid.store);
-                                            
-                                        
                                     },
                                     error: function (e) {
                                         console.log(e);
                                     }
                                 })
                                 updateProductGrid.startup();
-
                                 UpdateDialog.show();
                             },
                             error: function (e) {
                                 console.log(e);
                             }
                         });
-
                     }
                 });
     };

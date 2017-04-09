@@ -48,12 +48,14 @@ function OrderAction() {
 
 
 
-    this.setOrderId = function (evt) {
+    this.setOrderId = function (e) {
         require(["dojo/dom", "dijit/registry", "dojo/dom-class", "dojo/json", "dojo/domReady!"],
                 function (dom, registry, domClass) {
-                    var OrderId = orderGrid.getItem(evt.rowIndex).OrderId;
-                    orderId = OrderId;
-                    console.log('onClick:' + orderId);
+                    if (e != null) {
+                        var OrderId = orderGrid.getItem(e.rowIndex).OrderId;
+                        orderId = OrderId;
+                        console.log('onClick:' + orderId);
+                    }
                 });
     };
 
@@ -126,11 +128,12 @@ function OrderAction() {
                     load: function (jsonData) {
                         //console.log(updateData.items);
                         console.log(orderId);
+                        console.log(updateData);
                         if (jsonData != false) {
-                            console.log(orderId);
+                            console.log(updateData);
                             xhr.post({
                                 url: "/Order/UpdateOrderDetail",
-                                postData: CircularJSON.stringify({ id: orderId[0], items: updateData.items }),
+                                postData: CircularJSON.stringify({ id: orderId, items: updateData.items }),
                                 headers: { 'Content-Type': 'application/json' },
                                 handleAs: "json",
                                 load: function (jsonData) {
@@ -161,7 +164,7 @@ function OrderAction() {
                 //console.log(ref.toJson(data.items));
                 xhr.post({
                     url: "/Order/DeleteOrder",
-                    postData: CircularJSON.stringify({ id: orderId[0]}),
+                    postData: CircularJSON.stringify({ id: orderId}),
                     headers: { 'Content-Type': 'application/json' },
                     handleAs: "json",
                     load: function (jsonData) {
@@ -169,14 +172,13 @@ function OrderAction() {
                             var rowItem = orderGrid.getItem(deleteOrderRowIndex);
                             var store = orderGrid.store;
                             //store.deleteItem(rowItem);
-                            console.log(orderId[0]);
+                            console.log(orderId);
                             orderGrid.store.fetch({
-                                query: { OrderId: orderId[0] },
+                                query: { OrderId: orderId },
                                 onItem: function (item) {
                                     orderGrid.store.deleteItem(item);
                                 }
                             });
-
                             DeleteDialog.hide();
                         }
                         console.log(jsonData);
