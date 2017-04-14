@@ -31,10 +31,12 @@ var searchStructure = [
                                         onClick: function () {
                                             orderAction.setOrderIdByItem(item);
                                             orderAction.dbclickOrderGrid();
-                                        }
+                                        },
+                                        iconClass: "dijitIconEdit"
                                     });
                                     return btn;
                                 }
+
                             },
                             {
                                 name: "刪除",
@@ -48,7 +50,8 @@ var searchStructure = [
                                             orderAction.setOrderIdByItem(item);
                                             gridAction.setDeleteOrderRowIndex(rowIndex);
                                             gridAction.showOrderDeleteContentPane();
-                                        }
+                                        },
+                                        iconClass: "dijitIconDelete"
                                     });
                                     return btn;
                                 }

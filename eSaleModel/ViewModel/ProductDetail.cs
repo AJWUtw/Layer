@@ -24,7 +24,7 @@ namespace eSaleModel.ViewModel
         /// <summary>
         /// 單價
         /// </summary>
-        public List<decimal> UnitPrice { get; set; }
+        public List<int> UnitPrice { get; set; }
         
         /// <summary>
         /// 數量
