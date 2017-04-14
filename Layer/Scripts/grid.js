@@ -111,7 +111,7 @@ require([
     data = {
         identifer: 'ProductId',
         items: [
-        { ProductId: 1, ProductName: "Product HHYDP", UnitPrice: 18.00, Qty: 0, Sum: 0 }
+        { ProductId: 1, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 }
         ]
     };
     
@@ -161,20 +161,15 @@ require([
                                     widgetProps: {
                                         store: pNameStore,
                                         onChange: function (evt) {
-
-                                            //var item = inserProductGrid.getItem(this.tabIndex);
-                                            //console.log(this);
                                             var rowItem = inserProductGrid.getItem(insertProductRowIndex);
                                             var qty = insertProductStore.getValue(rowItem, "Qty");
                                             insertProductStore.setValue(rowItem, 'ProductName', jsonData[evt-1].ProductId);
                                             insertProductStore.setValue(rowItem, 'UnitPrice', jsonData[evt-1].UnitPrice);
                                             insertProductStore.setValue(rowItem, 'Sum', qty * jsonData[evt - 1].UnitPrice);
-                                            addProductSum(data);
+                                            gridAction.AddProductSum(data);
                                         }
                                     },
                                     formatter: function (inDatum, inRowIndex) {
-                                        //console.log(inDatum);
-                                        //console.log(inRowIndex);
                                         var sName = "Product HHYDP";
                                         pNameStore.fetchItemByIdentity({
                                             identity: inDatum,
@@ -208,7 +203,7 @@ require([
                                             var unitPrice = insertProductStore.getValue(rowItem, "UnitPrice");
                                             insertProductStore.setValue(rowItem, 'Qty', evt);
                                             insertProductStore.setValue(rowItem, 'Sum', unitPrice * evt);
-                                            addProductSum(data);
+                                            gridAction.AddProductSum(data);
                                             
                                         }
                                     }
@@ -233,7 +228,7 @@ require([
                                             onClick: function () {
                                                 var rowItem = inserProductGrid.getItem(rowIndex);
                                                 insertProductStore.deleteItem(rowItem);
-                                                addProductSum(data);
+                                                gridAction.AddProductSum(data);
                                             }
                                         });
                                         return btn;
@@ -268,20 +263,16 @@ require([
                                     widgetProps: {
                                         store: pNameStore,
                                         onChange: function (evt) {
-
-                                            //var item = updateProductGrid.getItem(this.tabIndex);
                                             console.log(this);
                                             var rowItem = updateProductGrid.getItem(updateProductRowIndex);
                                             var qty = updateProductStore.getValue(rowItem, "Qty");
                                             updateProductStore.setValue(rowItem, 'ProductName', jsonData[evt - 1].ProductId);
                                             updateProductStore.setValue(rowItem, 'UnitPrice', jsonData[evt - 1].UnitPrice);
                                             updateProductStore.setValue(rowItem, 'Sum', qty * jsonData[evt - 1].UnitPrice);
-                                            addUpdateProductSum(updateData);
+                                            gridAction.AddUpdateProductSum(updateData);
                                         }
                                     },
                                     formatter: function (inDatum, inRowIndex) {
-                                        //console.log(inDatum);
-                                        //console.log(inRowIndex);
                                         var sName = "Product HHYDP";
                                         pNameStore.fetchItemByIdentity({
                                             identity: inDatum,
@@ -315,7 +306,7 @@ require([
                                             var unitPrice = updateProductStore.getValue(rowItem, "UnitPrice");
                                             updateProductStore.setValue(rowItem, 'Qty', evt);
                                             updateProductStore.setValue(rowItem, 'Sum', unitPrice * evt);
-                                            addUpdateProductSum(updateData);
+                                            gridAction.AddUpdateProductSum(updateData);
 
                                         }
                                     }
@@ -340,7 +331,7 @@ require([
                                             onClick: function () {
                                                 var rowItem = updateProductGrid.getItem(rowIndex);
                                                 updateProductStore.deleteItem(rowItem);
-                                                addUpdateProductSum(updateData);
+                                                gridAction.AddUpdateProductSum(updateData);
                                             }
                                         });
                                         return btn;
@@ -381,8 +372,6 @@ require([
     
     orderStore = new ItemFileWriteStore({ url: './GetOrder' });
 
-    /*set up layout*/
-    /*create a new grid:*/
     orderGrid = new EnhancedGrid({
         id: 'grid',
         store: orderStore,
@@ -418,10 +407,42 @@ var productList;
 function GridAction() {
     var grid = this;
 
+    this.AddProductSum = function (data) {
+        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+                var total = 0.0;
+                for (i in data['items']) {
+                    total += parseFloat(data['items'][i].Sum);
+                }
+                console.log(total);
+                dom.byId('Total').innerHTML = total;
+            }
+        );
+    }
+    this.AddUpdateProductSum = function (data) {
+        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+                var total = 0.0;
+                for (i in data['items']) {
+                    total += parseFloat(data['items'][i].Sum);
+                }
+                dom.byId('updateTotal').innerHTML = total;
+                
+            }
+        );
+    }
+    this.AddSearchProductRow = function (OrderId, CustName, O_Orderdate, O_ShippedDate) {
+        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+                orderGrid.store.newItem({ OrderId: OrderId, CustName: CustName, O_Orderdate: O_Orderdate, O_ShippedDate: O_ShippedDate });
+            }
+        );
+    }
+
     this.AddInsertProductRow = function () {
         require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
             function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                inserProductGrid.store.newItem({ ProductId: 2, ProductName: "Product HHYDP", UnitPrice: 18.00, Qty: 0, Sum: 0 });
+                inserProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
             }
         );
     }
@@ -429,10 +450,9 @@ function GridAction() {
     this.AddUpdateProductRow = function () {
         require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
             function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                updateProductGrid.store.newItem({ ProductId: 2, ProductName: "Product HHYDP", UnitPrice: 18.00, Qty: 0, Sum: 0 });
+                updateProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
                 updateProductGrid.store.save();
                 console.log(updateProductStore);
-                //updateProductGrid._refresh();
             }
         );
     }
@@ -482,7 +502,7 @@ function GridAction() {
                             url: "/Order/GetUpdateDialog?id=" + orderId,
                             handleAs: "text",
                             load: function (jsonData) {
-                                dom.byId('test').innerHTML = jsonData;
+                                dom.byId('UpdateDailogFormArea').innerHTML = jsonData;
 
                                 updateProductGrid.store.fetch({
                                     query: { ProductId: 0 },
@@ -495,22 +515,44 @@ function GridAction() {
                                     handleAs: "text",
                                     load: function (jsonData) {
                                         var orderProduct = JSON.parse(jsonData);
+
                                         for (var i in orderProduct.items) {
                                             updateProductGrid.store.newItem(orderProduct.items[i]);
                                         }
+                                        grid.AddUpdateProductSum(orderProduct);
+
+                                        updateProductGrid.startup();
+                                        UpdateDialog.show();
                                     },
                                     error: function (e) {
                                         console.log(e);
                                     }
                                 })
-                                updateProductGrid.startup();
-                                UpdateDialog.show();
                             },
                             error: function (e) {
                                 console.log(e);
                             }
                         });
+
                     }
+                });
+    };
+
+    this.showOrderInsertContentPane = function () {
+        require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
+    "dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
+                function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
+                    xhr.get({
+                        url: "/Order/GetInsertDialog",
+                        handleAs: "text",
+                        load: function (jsonData) {
+                            dom.byId('InsertDailogFormArea').innerHTML = jsonData;
+                            InsertDialog.show();
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
                 });
     };
 

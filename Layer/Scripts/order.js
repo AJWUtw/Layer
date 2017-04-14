@@ -97,8 +97,12 @@ function OrderAction() {
                                 headers: { 'Content-Type': 'application/json' },
                                 handleAs: "json",
                                 load: function (jsonData) {
-                                    if (jsonData) {
+                                    console.log(jsonData);
+                                    if (jsonData.State) {
+                                        console.log(jsonData.State);
+                                        gridAction.AddSearchProductRow(jsonData.Order.OrderId, jsonData.Order.CustName, jsonData.Order.O_Orderdate, jsonData.Order.O_ShippedDate);
                                         dom.byId("insertOrderForm").reset();
+                                        
                                         InsertDialog.hide();
                                     }
                                     console.log(jsonData);

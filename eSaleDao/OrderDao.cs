@@ -156,13 +156,18 @@ namespace eSaleDao
                 cmd.Parameters.Add(new SqlParameter("@OrderId", orderDetail.OrderId));
                 cmd.Parameters.Add(new SqlParameter("@ProductID", orderDetail.ProductId));
                 cmd.Parameters.Add(new SqlParameter("@UnitPrice", orderDetail.UnitPrice));
-                cmd.Parameters.Add(new SqlParameter("@Qty", orderDetail.Qty));
+                
+                    cmd.Parameters.Add(new SqlParameter("@Qty", orderDetail.Qty));
+                
                 cmd.Parameters.Add(new SqlParameter("@Discount", orderDetail.Discount == null ? 0 : orderDetail.Discount));
                 //SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 //sqlAdapter.Fill(dt);
                 try
                 {
-                    var aa = cmd.ExecuteNonQuery();
+                    if (orderDetail.Qty > 0)
+                    {
+                        var aa = cmd.ExecuteNonQuery();
+                    }
                 }
                 catch (Exception e)
                 {

@@ -34,6 +34,20 @@ namespace Layer.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult GetInsertDialog()
+        {
+            
+            eSalesService.EmpService empService = new eSalesService.EmpService(this.GetDBConnectionString());
+            eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
+            eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
+            
+            ViewBag.EmpNameData = empService.GetEmpNameData();
+            ViewBag.CustNameData = cusService.GetCusNameData();
+            ViewBag.ShipperNameData = shipService.GetShipperNameData();
+
+            return PartialView();
+        }
 
         [HttpGet]
         public ActionResult GetUpdateDialog(int id)
@@ -67,7 +81,6 @@ namespace Layer.Controllers
             ViewBag.ShipperNameData = new SelectList(shipService.GetShipperNameData(), "Value", "Text", orderData.ShipperId);
 
             return PartialView();
-
         }
 
         [HttpGet]
@@ -234,12 +247,12 @@ namespace Layer.Controllers
         public JsonResult InsertOrderDetail(eSaleModel.ViewModel.ProductDetailWithId data)
         {
             var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            eSaleModel.ViewModel.SearchOrderGrid searchOrderGrid = new eSaleModel.ViewModel.SearchOrderGrid();
+            eSaleModel.Order orderData = new eSaleModel.Order();
+
             try
             {
-                //orderService.InsertOrderDetail(data);
-
                 eSaleModel.OrderDetails orderDetail = new eSaleModel.OrderDetails();
-                //productDetail = data.items[0];
                 orderDetail.OrderId = data.id;
                 orderDetail.ProductId = Convert.ToInt16( data.items[0].ProductName[0]);
                 orderDetail.UnitPrice = data.items[0].UnitPrice[0];
@@ -259,14 +272,18 @@ namespace Layer.Controllers
                     }
                 }
 
+                
+                searchOrderGrid.State = true;
+                searchOrderGrid.Order = orderService.GetOrderById(data.id);
 
-                return this.Json(true);
+                return this.Json(searchOrderGrid);
             }
             catch (Exception e)
             {
                 var ee = e;
+                searchOrderGrid.State = false;
 
-                return this.Json(false);
+                return this.Json(searchOrderGrid);
             }
         }
 
