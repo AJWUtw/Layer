@@ -68,6 +68,7 @@ namespace eSalesService
                 {
                     OrderId = (int)row["OrderId"],
                     CustId = (int)row["CustomerId"],
+                    CustName = row["CompanyName"].ToString(),
                     EmpId = (int)row["EmployeeId"],
                     O_Orderdate = row["Orderdate"].ToString(),
                     O_ShippedDate = row["ShippedDate"].ToString(),
