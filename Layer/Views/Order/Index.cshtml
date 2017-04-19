@@ -90,7 +90,7 @@
 
             <span data-dojo-type="dijit/form/Button" id="sendOrderCondition" data-dojo-props="iconClass:'dijitIconSearch'" onclick="orderAction.SearchOrderByCondition()">查詢</span>
 
-            <span data-dojo-type="dijit/form/Button" id="insertOrder" data-dojo-props="iconClass:'dijitIconNewTask'" onclick="gridAction.showOrderInsertContentPane();">新增</span>
+            <span data-dojo-type="dijit/form/Button" id="insertOrder" data-dojo-props="iconClass:'dijitIconNewTask'" onclick="orderAction.showOrderInsertContentPane();">新增</span>
 
         </form>
 
@@ -106,7 +106,7 @@
             <div id="InsertDailogFormArea"></div>
             訂單金額總計 <span id="Total"></span> 元
             <br />
-            <span data-dojo-type="dijit/form/Button" onclick="gridAction.AddInsertProductRow();">+新增商品</span>
+            <span data-dojo-type="dijit/form/Button" onclick="orderAction.AddInsertProductRow();">+新增商品</span>
 
             <div id="inserProductGrid" data-dojo-id="inserProductGrid"></div>
 
@@ -126,7 +126,7 @@
             <div id="UpdateDailogFormArea"></div>
             訂單金額總計 <span id="updateTotal"></span> 元
             <br />
-            <span data-dojo-type="dijit/form/Button" onclick="gridAction.AddUpdateProductRow()">+新增商品</span>
+            <span data-dojo-type="dijit/form/Button" onclick="orderAction.AddUpdateProductRow()">+新增商品</span>
 
             <div id="updateProductGrid" data-dojo-id="updateProductGrid"></div>
 

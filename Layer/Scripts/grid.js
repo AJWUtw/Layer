@@ -48,8 +48,8 @@ var searchStructure = [
                                         onClick: function (evt) {
                                             console.log(rowIndex);
                                             orderAction.setOrderIdByItem(item);
-                                            gridAction.setDeleteOrderRowIndex(rowIndex);
-                                            gridAction.showOrderDeleteContentPane();
+                                            orderAction.setDeleteOrderRowIndex(rowIndex);
+                                            orderAction.showOrderDeleteContentPane();
                                         },
                                         iconClass: "dijitIconDelete"
                                     });
@@ -166,7 +166,7 @@ require([
                                             insertProductStore.setValue(rowItem, 'ProductName', jsonData[evt-1].ProductId);
                                             insertProductStore.setValue(rowItem, 'UnitPrice', jsonData[evt-1].UnitPrice);
                                             insertProductStore.setValue(rowItem, 'Sum', qty * jsonData[evt - 1].UnitPrice);
-                                            gridAction.AddProductSum(data);
+                                            orderAction.AddProductSum(data);
                                         }
                                     },
                                     formatter: function (inDatum, inRowIndex) {
@@ -203,7 +203,7 @@ require([
                                             var unitPrice = insertProductStore.getValue(rowItem, "UnitPrice");
                                             insertProductStore.setValue(rowItem, 'Qty', evt);
                                             insertProductStore.setValue(rowItem, 'Sum', unitPrice * evt);
-                                            gridAction.AddProductSum(data);
+                                            orderAction.AddProductSum(data);
                                             
                                         }
                                     }
@@ -228,7 +228,7 @@ require([
                                             onClick: function () {
                                                 var rowItem = inserProductGrid.getItem(rowIndex);
                                                 insertProductStore.deleteItem(rowItem);
-                                                gridAction.AddProductSum(data);
+                                                orderAction.AddProductSum(data);
                                             }
                                         });
                                         return btn;
@@ -243,7 +243,7 @@ require([
                 autoWidth: "true",
                 autoHeight: "true",
                 onClick: function (evt, rowIndex) {
-                    gridAction.setInsertProductRowIndex(evt.rowIndex);
+                    orderAction.setInsertProductRowIndex(evt.rowIndex);
                 }
             }, "inserProductGrid");
             inserProductGrid.startup();
@@ -269,7 +269,7 @@ require([
                                             updateProductStore.setValue(rowItem, 'ProductName', jsonData[evt - 1].ProductId);
                                             updateProductStore.setValue(rowItem, 'UnitPrice', jsonData[evt - 1].UnitPrice);
                                             updateProductStore.setValue(rowItem, 'Sum', qty * jsonData[evt - 1].UnitPrice);
-                                            gridAction.AddUpdateProductSum(updateData);
+                                            orderAction.AddUpdateProductSum(updateData);
                                         }
                                     },
                                     formatter: function (inDatum, inRowIndex) {
@@ -306,7 +306,7 @@ require([
                                             var unitPrice = updateProductStore.getValue(rowItem, "UnitPrice");
                                             updateProductStore.setValue(rowItem, 'Qty', evt);
                                             updateProductStore.setValue(rowItem, 'Sum', unitPrice * evt);
-                                            gridAction.AddUpdateProductSum(updateData);
+                                            orderAction.AddUpdateProductSum(updateData);
 
                                         }
                                     }
@@ -331,7 +331,7 @@ require([
                                             onClick: function () {
                                                 var rowItem = updateProductGrid.getItem(rowIndex);
                                                 updateProductStore.deleteItem(rowItem);
-                                                gridAction.AddUpdateProductSum(updateData);
+                                                orderAction.AddUpdateProductSum(updateData);
                                             }
                                         });
                                         return btn;
@@ -347,7 +347,7 @@ require([
                 autoWidth: "true",
                 autoHeight: "true",
                 onClick: function (evt, rowIndex) {
-                    gridAction.setUpdateProductRowIndex(evt.rowIndex);
+                    orderAction.setUpdateProductRowIndex(evt.rowIndex);
                 }
             }, "updateProductGrid");
 
@@ -407,168 +407,168 @@ var productList;
 function GridAction() {
     var grid = this;
 
-    this.AddProductSum = function (data) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                var total = 0.0;
-                for (i in data['items']) {
-                    total += parseFloat(data['items'][i].Sum);
-                }
-                console.log(total);
-                dom.byId('Total').innerHTML = total;
-            }
-        );
-    }
-    this.AddUpdateProductSum = function (data) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                var total = 0.0;
-                for (i in data['items']) {
-                    total += parseFloat(data['items'][i].Sum);
-                }
-                dom.byId('updateTotal').innerHTML = total;
+    //this.AddProductSum = function (data) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            var total = 0.0;
+    //            for (i in data['items']) {
+    //                total += parseFloat(data['items'][i].Sum);
+    //            }
+    //            console.log(total);
+    //            dom.byId('Total').innerHTML = total;
+    //        }
+    //    );
+    //}
+    //this.AddUpdateProductSum = function (data) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            var total = 0.0;
+    //            for (i in data['items']) {
+    //                total += parseFloat(data['items'][i].Sum);
+    //            }
+    //            dom.byId('updateTotal').innerHTML = total;
                 
-            }
-        );
-    }
-    this.AddSearchProductRow = function (OrderId, CustName, O_Orderdate, O_ShippedDate) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                orderGrid.store.newItem({ OrderId: OrderId, CustName: CustName, O_Orderdate: O_Orderdate, O_ShippedDate: O_ShippedDate });
-            }
-        );
-    }
+    //        }
+    //    );
+    //}
+    //this.AddSearchProductRow = function (OrderId, CustName, O_Orderdate, O_ShippedDate) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            orderGrid.store.newItem({ OrderId: OrderId, CustName: CustName, O_Orderdate: O_Orderdate, O_ShippedDate: O_ShippedDate });
+    //        }
+    //    );
+    //}
 
-    this.AddInsertProductRow = function () {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                inserProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
-            }
-        );
-    }
+    //this.AddInsertProductRow = function () {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            inserProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
+    //        }
+    //    );
+    //}
 
-    this.AddUpdateProductRow = function () {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                updateProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
-                updateProductGrid.store.save();
-                console.log(updateProductStore);
-            }
-        );
-    }
-
-
-    this.setInsertProductRowIndex = function (rowIndex) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                insertProductRowIndex = rowIndex;
-                console.log(rowIndex);
-            }
-        );
-    }
-
-    this.setUpdateProductRowIndex = function (rowIndex) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                updateProductRowIndex = rowIndex;
-                console.log(rowIndex);
-            }
-        );
-    }
-    this.setDeleteOrderRowIndex = function (rowIndex) {
-        require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
-            function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
-                deleteOrderRowIndex = rowIndex;
-                console.log(rowIndex);
-            }
-        );
-    }
+    //this.AddUpdateProductRow = function () {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            updateProductGrid.store.newItem({ ProductId: 2, ProductName: 1, UnitPrice: 18.00, Qty: 0, Sum: 0 });
+    //            updateProductGrid.store.save();
+    //            console.log(updateProductStore);
+    //        }
+    //    );
+    //}
 
 
+    //this.setInsertProductRowIndex = function (rowIndex) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            insertProductRowIndex = rowIndex;
+    //            console.log(rowIndex);
+    //        }
+    //    );
+    //}
 
-    this.showOrderUpdateContentPane = function () {
-        require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
-    "dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
-                function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
-                    if (orderId == 'default') {
-
-                    } else {
-                        console.log(updateProductGrid.store);
-                        while (updateProductGrid.store._getItemsArray().length != 0) {
-                            updateProductGrid.store.deleteItem(updateProductGrid.store._getItemsArray()[0]);
-                        }
-                        console.log(updateProductGrid.store);
-                        xhr.get({
-                            url: "/Order/GetUpdateDialog?id=" + orderId,
-                            handleAs: "text",
-                            load: function (jsonData) {
-                                dom.byId('UpdateDailogFormArea').innerHTML = jsonData;
-
-                                updateProductGrid.store.fetch({
-                                    query: { ProductId: 0 },
-                                    onItem: function (item) {
-                                        updateProductStore.deleteItem(item);
-                                    }
-                                });
-                                xhr.get({
-                                    url: "/Order/GetOrderDetailById?id=" + orderId,
-                                    handleAs: "text",
-                                    load: function (jsonData) {
-                                        var orderProduct = JSON.parse(jsonData);
-
-                                        for (var i in orderProduct.items) {
-                                            updateProductGrid.store.newItem(orderProduct.items[i]);
-                                        }
-                                        grid.AddUpdateProductSum(orderProduct);
-
-                                        updateProductGrid.startup();
-                                        UpdateDialog.show();
-                                    },
-                                    error: function (e) {
-                                        console.log(e);
-                                    }
-                                })
-                            },
-                            error: function (e) {
-                                console.log(e);
-                            }
-                        });
-
-                    }
-                });
-    };
-
-    this.showOrderInsertContentPane = function () {
-        require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
-    "dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
-                function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
-                    xhr.get({
-                        url: "/Order/GetInsertDialog",
-                        handleAs: "text",
-                        load: function (jsonData) {
-                            dom.byId('InsertDailogFormArea').innerHTML = jsonData;
-                            InsertDialog.show();
-                        },
-                        error: function (e) {
-                            console.log(e);
-                        }
-                    });
-                });
-    };
+    //this.setUpdateProductRowIndex = function (rowIndex) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            updateProductRowIndex = rowIndex;
+    //            console.log(rowIndex);
+    //        }
+    //    );
+    //}
+    //this.setDeleteOrderRowIndex = function (rowIndex) {
+    //    require(["dojo/data/ItemFileWriteStore", "dojo/store/Memory", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+    //        function (ItemFileWriteStore, Memory, dom, xhr, request, domForm, ready) {
+    //            deleteOrderRowIndex = rowIndex;
+    //            console.log(rowIndex);
+    //        }
+    //    );
+    //}
 
 
 
-    this.showOrderDeleteContentPane = function () {
-        require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
-    "dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
-                function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
-                    if (orderId == null) {
+    //this.showOrderUpdateContentPane = function () {
+    //    require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
+    //"dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
+    //            function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
+    //                if (orderId == 'default') {
 
-                    } else {
-                        dom.byId('DeleteDialogContent').innerHTML = "訂單編號:" + orderId;
-                        DeleteDialog.show();
-                    }
-                });
-    };
+    //                } else {
+    //                    console.log(updateProductGrid.store);
+    //                    while (updateProductGrid.store._getItemsArray().length != 0) {
+    //                        updateProductGrid.store.deleteItem(updateProductGrid.store._getItemsArray()[0]);
+    //                    }
+    //                    console.log(updateProductGrid.store);
+    //                    xhr.get({
+    //                        url: "/Order/GetUpdateDialog?id=" + orderId,
+    //                        handleAs: "text",
+    //                        load: function (jsonData) {
+    //                            dom.byId('UpdateDailogFormArea').innerHTML = jsonData;
+
+    //                            updateProductGrid.store.fetch({
+    //                                query: { ProductId: 0 },
+    //                                onItem: function (item) {
+    //                                    updateProductStore.deleteItem(item);
+    //                                }
+    //                            });
+    //                            xhr.get({
+    //                                url: "/Order/GetOrderDetailById?id=" + orderId,
+    //                                handleAs: "text",
+    //                                load: function (jsonData) {
+    //                                    var orderProduct = JSON.parse(jsonData);
+
+    //                                    for (var i in orderProduct.items) {
+    //                                        updateProductGrid.store.newItem(orderProduct.items[i]);
+    //                                    }
+    //                                    grid.AddUpdateProductSum(orderProduct);
+
+    //                                    updateProductGrid.startup();
+    //                                    UpdateDialog.show();
+    //                                },
+    //                                error: function (e) {
+    //                                    console.log(e);
+    //                                }
+    //                            })
+    //                        },
+    //                        error: function (e) {
+    //                            console.log(e);
+    //                        }
+    //                    });
+
+    //                }
+    //            });
+    //};
+
+    //this.showOrderInsertContentPane = function () {
+    //    require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
+    //"dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
+    //            function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
+    //                xhr.get({
+    //                    url: "/Order/GetInsertDialog",
+    //                    handleAs: "text",
+    //                    load: function (jsonData) {
+    //                        dom.byId('InsertDailogFormArea').innerHTML = jsonData;
+    //                        InsertDialog.show();
+    //                    },
+    //                    error: function (e) {
+    //                        console.log(e);
+    //                    }
+    //                });
+    //            });
+    //};
+
+
+
+    //this.showOrderDeleteContentPane = function () {
+    //    require(["dojo/dom", "dojo/_base/xhr", "dijit/registry", "dojo/data/ItemFileWriteStore",
+    //"dojox/grid/DataGrid", "dojo/json", "dojo/domReady!"],
+    //            function (dom, xhr, registry, ItemFileWriteStore, DataGrid) {
+    //                if (orderId == null) {
+
+    //                } else {
+    //                    dom.byId('DeleteDialogContent').innerHTML = "訂單編號:" + orderId;
+    //                    DeleteDialog.show();
+    //                }
+    //            });
+    //};
 
 }
