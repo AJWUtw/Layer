@@ -382,7 +382,7 @@ require([
         rowWidth: "100%",
         plugins: {
             pagination: {
-                pageSizes: ["25", "50", "100", "All"],
+                pageSizes: ["25", "50", "100"],
                 description: true,
                 sizeSwitch: true,
                 pageStepper: true,

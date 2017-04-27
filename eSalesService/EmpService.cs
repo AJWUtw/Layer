@@ -54,12 +54,7 @@ namespace eSalesService
         private List<SelectListItem> MapEmpNameSelectListItem(DataTable empData)
         {
             List<SelectListItem> result = new List<SelectListItem>();
-            result.Add(new SelectListItem()
-            {
-                Value = "0",
-                Text = "不篩選",
-
-            });
+            
 
             foreach (DataRow row in empData.Rows)
             {

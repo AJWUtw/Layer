@@ -70,7 +70,7 @@ namespace eSaleDao
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT * FROM Sales.Orders AS a JOIN Sales.Customers AS b ON a.CustomerID =b.CustomerID WHERE 
-                                                            (OrderId=@OrderId OR @OrderId = 0 ) AND 
+                                                            (CAST(OrderId as CHAR) LIKE @OrderId OR @OrderId IS NULL ) AND 
                                                             (b.CompanyName LIKE @CustName OR @CustName IS NULL ) AND
                                                             (EmployeeId = @EmpId OR @EmpId = 0 ) AND
                                                             (ShipperId=@ShipperId OR @ShipperId = 0 ) AND
@@ -81,7 +81,7 @@ namespace eSaleDao
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add(new SqlParameter("@OrderId", condition.OrderId == null ? 0 : condition.OrderId));
+                cmd.Parameters.Add(new SqlParameter("@OrderId", condition.O_OrderId == null ? string.Empty : condition.O_OrderId));
                 cmd.Parameters.Add(new SqlParameter("@CustName", condition.CustName == null ? string.Empty : condition.CustName));
                 cmd.Parameters.Add(new SqlParameter("@EmpId", condition.EmpId == null ? 0 : condition.EmpId));
                 cmd.Parameters.Add(new SqlParameter("@ShipperId", condition.ShipperId == null ? 0 : condition.ShipperId));
@@ -216,16 +216,8 @@ namespace eSaleDao
                 cmd.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
 
                 Console.WriteLine(cmd);
-                try
-                {
                     var aa = cmd.ExecuteNonQuery();
                     return aa;
-                }
-                catch (Exception e)
-                {
-                    var aaa = e;
-                    return 99;
-                }
                
             }
 

@@ -31,6 +31,15 @@ function OrderAction() {
         );
     }
 
+    this.resetSearchOrder = function (callback) {
+        require(["dojo/data/ItemFileWriteStore", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
+            function (ItemFileWriteStore, dom, xhr, request, domForm, ready) {
+                dom.byId("searchOrderCondition").reset();
+            }
+        );
+    }
+
+
     this.GetProductList = function (callback) {
         require(["dojo/data/ItemFileWriteStore", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojo/ready", "dojo/json"],
             function (ItemFileWriteStore, dom, xhr, request, domForm, ready) {
@@ -90,10 +99,10 @@ function OrderAction() {
                     handleAs: "json",
                     load: function (jsonData) {
                         console.log(data.items);
-                        if (jsonData!=false) {
+                        if (jsonData.State) {
                             xhr.post({
                                 url: "/Order/InsertOrderDetail",
-                                postData: CircularJSON.stringify({ id: jsonData, items: data.items }),
+                                postData: CircularJSON.stringify({ id: jsonData.Orderid, items: data.items }),
                                 headers: { 'Content-Type': 'application/json' },
                                 handleAs: "json",
                                 load: function (jsonData) {
@@ -111,6 +120,9 @@ function OrderAction() {
                                     console.log(e);
                                 }
                             });
+                        } else {
+                            console.log(jsonData.Describe);
+                            dom.byId('InsertErrorMsg').innerHTML = jsonData.Describe;
                         }
                     },
                     error: function (e) {
@@ -124,17 +136,13 @@ function OrderAction() {
     this.UpdateOrder = function () {
         require(["dojo/data/ItemFileWriteStore", "dojo/dom", "dojo/_base/xhr", "dojo/request", "dojo/dom-form", "dojox/json/ref", "dojo/ready", "dojo/json"],
             function (ItemFileWriteStore, dom, xhr, request, domForm, ref, ready) {
-                //console.log(ref.toJson(data.items));
                 xhr.post({
                     url: "/Order/UpdateOrder",
                     form: dom.byId("updateOrderForm"),
                     handleAs: "json",
                     load: function (jsonData) {
-                        //console.log(updateData.items);
-                        console.log(orderId);
-                        console.log(updateData);
-                        if (jsonData != false) {
-                            console.log(updateData);
+                        console.log(jsonData);
+                        if (jsonData.State) {
                             xhr.post({
                                 url: "/Order/UpdateOrderDetail",
                                 postData: CircularJSON.stringify({ id: orderId, items: updateData.items }),
@@ -151,6 +159,9 @@ function OrderAction() {
                                     console.log(e);
                                 }
                             });
+                        } else {
+                            console.log(jsonData.Describe);
+                            dom.byId('UpdateErrorMsg').innerHTML = jsonData.Describe;
                         }
                     },
                     error: function (e) {
@@ -293,6 +304,7 @@ function OrderAction() {
                             handleAs: "text",
                             load: function (jsonData) {
                                 dom.byId('UpdateDailogFormArea').innerHTML = jsonData;
+                                dom.byId('UpdateErrorMsg').innerHTML = "";
 
                                 updateProductGrid.store.fetch({
                                     query: { ProductId: 0 },
@@ -338,6 +350,7 @@ function OrderAction() {
                         handleAs: "text",
                         load: function (jsonData) {
                             dom.byId('InsertDailogFormArea').innerHTML = jsonData;
+                            dom.byId('InsertErrorMsg').innerHTML = "";
                             InsertDialog.show();
                         },
                         error: function (e) {

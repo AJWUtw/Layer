@@ -48,7 +48,7 @@
                         @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
                     <th>
-                        @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData)
+                        @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData, "尚未選擇")
                     </th>
                 </tr>
                 <tr>
@@ -56,7 +56,7 @@
                         @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
                     <th>
-                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData)
+                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData, "尚未選擇")
                     </th>
                 </tr>
                 <tr>
@@ -89,7 +89,7 @@
             </table>
 
             <span data-dojo-type="dijit/form/Button" id="sendOrderCondition" data-dojo-props="iconClass:'dijitIconSearch'" onclick="orderAction.SearchOrderByCondition()">查詢</span>
-
+            <span data-dojo-type="dijit/form/Button" id="resetSearchOrder" data-dojo-props="iconClass:'dijitIconClear'" onclick="orderAction.resetSearchOrder();">清除</span>
             <span data-dojo-type="dijit/form/Button" id="insertOrder" data-dojo-props="iconClass:'dijitIconNewTask'" onclick="orderAction.showOrderInsertContentPane();">新增</span>
 
         </form>

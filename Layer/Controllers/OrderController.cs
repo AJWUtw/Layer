@@ -135,7 +135,7 @@ namespace Layer.Controllers
 
         }
         [HttpGet]
-        public JsonResult GetOrder(eSaleModel.Order condition)
+        public JsonResult GetOrder()
         {
             var result = new eSaleModel.Order();
             var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
@@ -189,10 +189,10 @@ namespace Layer.Controllers
             var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
             var store = new eSaleModel.Store();
 
-            result.OrderId = condition.OrderId;
+            result.O_OrderId = "%" + Convert.ToString(condition.OrderId) + "%";
             result.CustName = "%" + (condition.CustName)+ "%" ;
-            result.EmpId = Int32.Parse(condition.EmpName);
-            result.ShipperId = Int32.Parse(condition.ShipperName);
+            result.EmpId = condition.EmpName == null ? 0 : Int32.Parse(condition.EmpName) ;
+            result.ShipperId = condition.ShipperName == null ? 0 : Int32.Parse(condition.ShipperName);
             result.Orderdate = condition.Orderdate;
             result.RequiredDate = condition.RequiredDate;
             result.ShippedDate = condition.ShippedDate;
@@ -229,12 +229,18 @@ namespace Layer.Controllers
                 result.ShipPostalCode = orderData.ShipPostalCode;
                 result.ShipAddress = orderData.ShipAddress;
 
-                int orderId = orderService.InsertOrder(result);
-                return this.Json(orderId, JsonRequestBehavior.AllowGet);
-            }catch (Exception)
-            {
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Orderid = orderService.InsertOrder(result);
+                error.State = true;
 
-                return this.Json(false, JsonRequestBehavior.AllowGet);
+                return this.Json(error, JsonRequestBehavior.AllowGet);
+            }catch (Exception e)
+            {
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Describe = "尚未填寫完成";
+                error.State = false;
+
+                return this.Json(error, JsonRequestBehavior.AllowGet);
             }
             
         }
@@ -314,14 +320,22 @@ namespace Layer.Controllers
                 result.ShipPostalCode = orderData.ShipPostalCode;
                 result.ShipAddress = orderData.ShipAddress;
                 result.ShipName = orderData.ShipName;
-
-                var aa = orderService.UpdateOrder(result);
-                return this.Json(aa, JsonRequestBehavior.AllowGet);
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.State = true;
+                error.Orderid = orderService.UpdateOrder(result);
+                //var aa = orderService.UpdateOrder(result);
+                return this.Json(error, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception)
+           catch (Exception e)
             {
-
-                return this.Json(false, JsonRequestBehavior.AllowGet);
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                //var msg = Convert.ToString(e);
+                //var start = msg.IndexOf("參數化查詢");
+                //var end = msg.IndexOf("必須有參數");
+                //error.Describe = msg.Substring(start+8,end-start-9);
+                error.Describe = "尚未填寫完成";
+                error.State = false;
+                return this.Json(error, JsonRequestBehavior.AllowGet);
             }
 
         }
