@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Order2\Product.cs" />
+    <Compile Include="Order2\OrderViewModel.cs" />
+    <Compile Include="Order2\ProductViewModel.cs" />
+    <Compile Include="Order2\GridModel.cs" />
     <Compile Include="Cus.cs" />
     <Compile Include="FilteringSelect.cs" />
     <Compile Include="Product.cs" />

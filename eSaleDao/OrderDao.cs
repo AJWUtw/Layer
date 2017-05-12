@@ -65,12 +65,36 @@ namespace eSaleDao
             }
             return dt;
         }
+        /// <summary>
+        /// 取得所有訂單資料
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public DataTable GetOrder()
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT * FROM Sales.Orders AS a JOIN Sales.Customers AS b ON a.CustomerID =b.CustomerID ";
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+            return dt;
+        }
 
+        /// <summary>
+        /// 依篩選條件取得訂單資料
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         public DataTable GetOrderByCondition(eSaleModel.Order condition)
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT * FROM Sales.Orders AS a JOIN Sales.Customers AS b ON a.CustomerID =b.CustomerID WHERE 
-                                                            (CAST(OrderId as CHAR) LIKE @OrderId OR @OrderId IS NULL ) AND 
+                                                            (CAST(OrderId as CHAR) LIKE @OrderId OR @OrderId IS NULL) AND 
                                                             (b.CompanyName LIKE @CustName OR @CustName IS NULL ) AND
                                                             (EmployeeId = @EmpId OR @EmpId = 0 ) AND
                                                             (ShipperId=@ShipperId OR @ShipperId = 0 ) AND
@@ -94,6 +118,11 @@ namespace eSaleDao
             }
             return dt;
         }
+        /// <summary>
+        /// 新增訂單資料
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public int InsertOrder(eSaleModel.Order order)
         {
             string sql = @" Insert INTO Sales.Orders
@@ -177,7 +206,11 @@ namespace eSaleDao
             return dt;
         }
 
-
+        /// <summary>
+        /// 修改訂單資料
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public int UpdateOrder(eSaleModel.Order order)
         {
             string sql = @" Update Sales.Orders SET
@@ -223,6 +256,10 @@ namespace eSaleDao
 
         }
 
+        /// <summary>
+        /// 刪除訂單資料
+        /// </summary>
+        /// <param name="orderDetail"></param>
         public void DeleteOrder(eSaleModel.OrderDetails orderDetail)
         {
             string sqlD = "DELETE FROM Sales.Orders WHERE OrderId=@OrderId";
@@ -244,7 +281,10 @@ namespace eSaleDao
             }
             
         }
-
+        /// <summary>
+        /// 刪除訂單明細
+        /// </summary>
+        /// <param name="orderDetail"></param>
         public void DeleteOrderDetail(eSaleModel.OrderDetails orderDetail)
         {
             string sqlD = "DELETE FROM Sales.OrderDetails WHERE OrderId=@OrderId";

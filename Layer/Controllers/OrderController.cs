@@ -33,7 +33,10 @@ namespace Layer.Controllers
             ViewBag.ShipperNameData = shipService.GetShipperNameData();
             return View();
         }
-
+        /// <summary>
+        /// 取得新增視窗
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GetInsertDialog()
         {
@@ -48,7 +51,11 @@ namespace Layer.Controllers
 
             return PartialView();
         }
-
+        /// <summary>
+        /// 取得修改視窗
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GetUpdateDialog(int id)
         {
@@ -82,6 +89,10 @@ namespace Layer.Controllers
 
             return PartialView();
         }
+        /// <summary>
+        /// 取得商品清單
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet]
         public JsonResult GetProductList()
@@ -98,7 +109,10 @@ namespace Layer.Controllers
             return this.Json(productService.GetProductByCondition(result), JsonRequestBehavior.AllowGet);
 
         }
-
+        /// <summary>
+        /// 取得商品名稱清單
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetProductNameList()
         {
@@ -111,6 +125,10 @@ namespace Layer.Controllers
             return this.Json(store, JsonRequestBehavior.AllowGet);
 
         }
+        /// <summary>
+        /// 取得 dojo store 預設格式
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetInsertRow()
         {
@@ -134,6 +152,11 @@ namespace Layer.Controllers
             return this.Json(store, JsonRequestBehavior.AllowGet);
 
         }
+
+        /// <summary>
+        /// 取得訂單資料
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetOrder()
         {
@@ -154,7 +177,11 @@ namespace Layer.Controllers
             return this.Json(store, JsonRequestBehavior.AllowGet );
 
         }
-
+        /// <summary>
+        /// 依OrderId取得訂單資訊
+        /// </summary>
+        /// <param name="condition">篩選條件</param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetOrderById(int id)
         {
@@ -165,7 +192,11 @@ namespace Layer.Controllers
 
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 依OrderId取得訂單明細
+        /// </summary>
+        /// <param name="condition">篩選條件</param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetOrderDetailById(int id)
         {
@@ -178,7 +209,7 @@ namespace Layer.Controllers
             return this.Json(store, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 取得訂單資訊
+        /// 依據篩選條件取得訂單資訊
         /// </summary>
         /// <param name="condition">篩選條件</param>
         /// <returns></returns>
@@ -286,15 +317,16 @@ namespace Layer.Controllers
             }
             catch (Exception e)
             {
-                var ee = e;
-                searchOrderGrid.State = false;
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Orderid = data.id;
+                error.State = false;
 
-                return this.Json(searchOrderGrid);
+                return this.Json(error);
             }
         }
 
         /// <summary>
-        /// 新增訂單資訊
+        /// 修改訂單資訊
         /// </summary>
         /// <param name="orderData">訂單資訊</param>
         /// <returns></returns>
@@ -340,7 +372,7 @@ namespace Layer.Controllers
 
         }
         /// <summary>
-        /// 新增訂單明細
+        /// 修改訂單明細
         /// </summary>
         /// <param name="data">訂單明細</param>
         /// <returns></returns>
@@ -391,7 +423,7 @@ namespace Layer.Controllers
 
 
         /// <summary>
-        /// 新增訂單明細
+        /// 刪除訂單明細
         /// </summary>
         /// <param name="data">訂單明細</param>
         /// <returns></returns>
