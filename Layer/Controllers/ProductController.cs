@@ -98,18 +98,18 @@ namespace Layer.Controllers
                 var data = new List<ProductViewModel>();
                 data.Add(new ProductViewModel()
                 {
-                    ProductID = 1,
+                    ProductId = 1,
                     ProductName = "Chai",
                     UnitPrice = 18,
                     UnitsInStock = 39,
-                    Discontinued = false
+                    Discount = false
 
                 });
                 var total = 1;
 
                 gridModel = new GridModel()
                 {
-                    Data = data.OrderBy(p => p.ProductID).Skip(skip)
+                    Data = data.OrderBy(p => p.ProductId).Skip(skip)
                                 .Take(take)
                                 .ToList(),
                     Total = total

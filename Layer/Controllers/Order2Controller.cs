@@ -38,7 +38,71 @@ namespace Layer.Controllers
 
             return this.Json(data, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 取得所有 PorductName 和 PorductID
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ReadPorductList()
+        {
+            var productService = new eSalesService.ProductService(this.GetDBConnectionString());
+            
+            var data =  productService.GetProductList();
+            
+            return this.Json(data, JsonRequestBehavior.AllowGet);
+        }
 
+        /// <summary>
+        /// 取得所有 PorductName 和 PorductID
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult ReadPorductById(int id)
+        {
+            var productService = new eSalesService.ProductService(this.GetDBConnectionString());
+
+            var data = productService.GetProductById(id);
+
+            return this.Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 取得所有 PorductName 和 PorductID
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ReadCustomerList()
+        {
+            eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
+            
+            var data = cusService.GetCusNameData();
+
+            return this.Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 取得所有 PorductName 和 PorductID
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ReadEmployeeList()
+        {
+            eSalesService.EmpService empService = new eSalesService.EmpService(this.GetDBConnectionString());
+            
+            var data = empService.GetEmpNameData();
+
+            return this.Json(data, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 取得所有 PorductName 和 PorductID
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ReadShipperList()
+        {
+            eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
+            
+            var data = shipService.GetShipperNameData();
+
+            return this.Json(data, JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// 依據篩選條件取得訂單資訊
         /// </summary>
@@ -74,7 +138,7 @@ namespace Layer.Controllers
         [HttpGet]
         public JsonResult GetOrderDetailById(int id)
         {
-            var orderService = new eSalesService.OrderService(this.GetDBConnectionString());
+            var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
             var store = new eSaleModel.Store();
 
             var data = orderService.GetOrderDetailById(id);
@@ -83,7 +147,49 @@ namespace Layer.Controllers
         }
 
 
+        /// <summary>
+        /// 新增訂單資訊
+        /// </summary>
+        /// <param name="orderData">訂單資訊</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult InsertOrder(OrderDetailViewModel orderData)
+        {
+            var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
+            try
+            {
+                var result = new OrderDetailViewModel();
 
+                result.CustId = Int32.Parse(orderData.CustName);
+                result.EmpId = Int32.Parse(orderData.EmpName);
+                result.Orderdate = orderData.Orderdate;
+                result.RequiredDate = orderData.RequiredDate;
+                result.ShippedDate = orderData.ShippedDate;
+                result.ShipperId = Int32.Parse(orderData.ShipperName);
+                result.Freight = orderData.Freight == null ? 0 : orderData.Freight;
+                result.ShipCountry = orderData.ShipCountry == null ? string.Empty : orderData.ShipCountry;
+                result.ShipCity = orderData.ShipCity == null ? string.Empty : orderData.ShipCity;
+                result.ShipRegion = orderData.ShipRegion == null ? string.Empty : orderData.ShipRegion;
+                result.ShipPostalCode = orderData.ShipPostalCode == null ? string.Empty : orderData.ShipPostalCode;
+                result.ShipAddress = orderData.ShipAddress == null ? string.Empty : orderData.ShipAddress ;
+                result.Products = orderData.Products;
+
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Orderid = orderService.InsertOrder(result);
+                error.State = true;
+
+                return this.Json(error, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Describe = "尚未填寫完成";
+                error.State = false;
+
+                return this.Json(error, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
 
 

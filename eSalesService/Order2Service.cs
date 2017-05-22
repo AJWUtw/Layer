@@ -23,6 +23,10 @@ namespace eSalesService
         {
             this.DbConn = dbConn;
         }
+
+        /*
+         取得 DataTable 資料
+        */
         /// <summary>
         /// 依訂單id取得訂單資料
         /// </summary>
@@ -67,6 +71,26 @@ namespace eSalesService
             return this.MapOrderStore(datalist);
 
         }
+        /*
+         新增資料
+        */
+
+        /// <summary>
+        /// 新增訂單資料
+        /// </summary>
+        /// <param name="data">訂單資料</param>
+        /// <returns></returns>
+        public int InsertOrder(OrderDetailViewModel data)
+        {
+            eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
+            return orderDao.InsertOrderInSqlTrans(data);
+        }
+
+
+
+        /*
+         整理 DataTable 資料
+        */
         private List<eSaleModel.Order> MapOrderData(DataTable orderData)
         {
             List<eSaleModel.Order> result = new List<eSaleModel.Order>();

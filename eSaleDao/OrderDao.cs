@@ -207,6 +207,118 @@ namespace eSaleDao
         }
 
         /// <summary>
+        /// 新增訂單資料 SqlTransaction.Rollback
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public int InsertOrderInSqlTrans(eSaleModel.Order2.OrderDetailViewModel order)
+        {
+            string sql_1 = @" Insert INTO Sales.Orders
+                        (
+							CustomerID,EmployeeID,orderdate,requireddate,shippeddate,shipperid,freight,
+							shipname,shipaddress,shipcity,shipregion,shippostalcode,shipcountry
+						)
+                    OUTPUT INSERTED.OrderID 
+						VALUES
+						(
+							@CustomerID,@EmployeeID,@Orderdate,@Requireddate,@Shippeddate,@Shipperid,@Freight,
+							@Shipname,@Shipaddress,@Shipcity,@Shipregion,@Shippostalcode,@Shipcountry
+						)";
+            string sql_2 = @" Insert INTO Sales.OrderDetails
+						 (
+							OrderID,ProductID,UnitPrice,Qty,Discount
+						)
+						VALUES
+						(
+							@OrderID,@ProductID,@UnitPrice,@Qty,@Discount
+						)";
+            int orderId=0;
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+
+                SqlCommand command = conn.CreateCommand();
+                SqlTransaction transaction;
+
+                // Start a local transaction.
+                transaction = conn.BeginTransaction("SampleTransaction");
+
+                // Must assign both transaction object and connection
+                // to Command object for a pending local transaction
+                command.Connection = conn;
+                command.Transaction = transaction;
+
+                try
+                {
+                    command.CommandText = sql_1;
+                    command.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
+                    command.Parameters.Add(new SqlParameter("@Orderdate", order.Orderdate));
+                    command.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
+                    command.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
+                    command.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
+                    command.Parameters.Add(new SqlParameter("@Freight", order.Freight));
+                    command.Parameters.Add(new SqlParameter("@Shipname", "aa"));
+                    command.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
+                    command.Parameters.Add(new SqlParameter("@ShipCity", order.ShipCity));
+                    command.Parameters.Add(new SqlParameter("@ShipRegion", order.ShipRegion));
+                    command.Parameters.Add(new SqlParameter("@ShipPostalCode", order.ShipPostalCode));
+                    command.Parameters.Add(new SqlParameter("@ShipCountry", order.ShipCountry));
+                    
+                    object newId = command.ExecuteScalar();
+                    orderId = Convert.ToInt32(newId);
+
+                    command.CommandText = sql_2;
+
+                    if (order.Products.Count > 0)
+                    {
+                        for (int i = 0; i < order.Products.Count; i++)
+                        {
+                            if (order.Products[i].Qty > 0)
+                            {
+                                command.Parameters.Clear();
+                                command.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                                command.Parameters.Add(new SqlParameter("@ProductID", order.Products[i].ProductName.ProductId));
+                                command.Parameters.Add(new SqlParameter("@UnitPrice", order.Products[i].UnitPrice));
+                                command.Parameters.Add(new SqlParameter("@Qty", order.Products[i].Qty));
+                                command.Parameters.Add(new SqlParameter("@Discount", order.Products[i].Discount == null ? false : order.Products[i].Discount));
+
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+
+                            // Attempt to commit the transaction.
+                    transaction.Commit();
+                    Console.WriteLine("Both records are written to database.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+
+                    // Attempt to roll back the transaction.
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        // This catch block will handle any errors that may have occurred
+                        // on the server that would cause the rollback to fail, such as
+                        // a closed connection.
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                    }
+                }
+                
+                conn.Close();
+            }
+            return orderId;
+
+        }
+
+        /// <summary>
         /// 修改訂單資料
         /// </summary>
         /// <param name="order"></param>

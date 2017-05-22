@@ -27,23 +27,24 @@ namespace eSalesService
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public eSaleModel.Product GetProductById(string id)
+        public List<eSaleModel.Order2.ProductViewModel> GetProductById(int id)
         {
             eSaleDao.ProductDao productDao = new eSaleDao.ProductDao(this.DbConn);
-            return productDao.GetProductById(id);
+            var datalist = productDao.GetProductById(id);
+            return this.MapProduct(datalist);
         }
         /// <summary>
-        /// 取得商品清單
+        /// 取得商品清單2
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<eSaleModel.FilteringSelect> GetProductList()
+        public List<eSaleModel.ProductList> GetProductList()
         {
             List<eSaleModel.Product> result = new List<eSaleModel.Product>();
             eSaleDao.ProductDao productDao = new eSaleDao.ProductDao(this.DbConn);
             var datalist = productDao.GetProductNameList();
 
-            return this.MapProductNameList(datalist);
+            return this.MapProductList(datalist);
         }
 
         /// <summary>
@@ -74,9 +75,56 @@ namespace eSalesService
             return this.MapProductStore(datalist);
 
         }
+        private List<eSaleModel.ProductList> MapProductList(DataTable productData)
+        {
+            List<eSaleModel.ProductList> result = new List<eSaleModel.ProductList>();
 
-        
+            foreach (DataRow row in productData.Rows)
+            {
+                result.Add(new eSaleModel.ProductList()
+                {
+                    ProductName = row["ProductName"].ToString(),
+                    ProductId = (int)row["ProductId"]
+                });
+            }
+            return result;
+        }
+
+        private List<eSaleModel.Order2.ProductViewModel> MapProduct(DataTable productData)
+        {
+            List<eSaleModel.Order2.ProductViewModel> result = new List<eSaleModel.Order2.ProductViewModel>();
+
+            foreach (DataRow row in productData.Rows)
+            {
+                result.Add(new eSaleModel.Order2.ProductViewModel()
+                {
+                    ProductName = row["ProductName"].ToString(),
+                    ProductId = (int)row["ProductId"],
+                    UnitPrice = (decimal)row["UnitPrice"],
+                    Qty = 0,
+                    Sum = 0
+                });
+            }
+            return result;
+        }
+
+
         private List<eSaleModel.FilteringSelect> MapProductNameList(DataTable productData)
+        {
+            List<eSaleModel.FilteringSelect> result = new List<eSaleModel.FilteringSelect>();
+
+            foreach (DataRow row in productData.Rows)
+            {
+                result.Add(new eSaleModel.FilteringSelect()
+                {
+                    name = row["ProductName"].ToString(),
+                    id = (int)row["ProductId"]
+                });
+            }
+            return result;
+        }
+
+        private List<eSaleModel.FilteringSelect> MapProductNaList(DataTable productData)
         {
             List<eSaleModel.FilteringSelect> result = new List<eSaleModel.FilteringSelect>();
 
