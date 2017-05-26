@@ -119,7 +119,7 @@ namespace Layer.Controllers
             result.CustName = "%" + (condition.CustName) + "%";
             result.EmpId = condition.EmpName == null ? 0 : Int32.Parse(condition.EmpName);
             result.ShipperId = condition.ShipperName == null ? 0 : Int32.Parse(condition.ShipperName);
-            result.Orderdate = condition.Orderdate;
+            result.OrderDate = condition.OrderDate;
             result.RequiredDate = condition.RequiredDate;
             result.ShippedDate = condition.ShippedDate;
 
@@ -139,7 +139,6 @@ namespace Layer.Controllers
         public JsonResult GetOrderDetailById(int id)
         {
             var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
-            var store = new eSaleModel.Store();
 
             var data = orderService.GetOrderDetailById(id);
 
@@ -162,7 +161,7 @@ namespace Layer.Controllers
 
                 result.CustId = Int32.Parse(orderData.CustName);
                 result.EmpId = Int32.Parse(orderData.EmpName);
-                result.Orderdate = orderData.Orderdate;
+                result.OrderDate = orderData.OrderDate;
                 result.RequiredDate = orderData.RequiredDate;
                 result.ShippedDate = orderData.ShippedDate;
                 result.ShipperId = Int32.Parse(orderData.ShipperName);
@@ -190,6 +189,85 @@ namespace Layer.Controllers
             }
 
         }
+
+
+
+
+        /// <summary>
+        /// 修改訂單資訊
+        /// </summary>
+        /// <param name="orderData">訂單資訊</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult UpdateOrder(OrderDetailViewModel orderData)
+        {
+            var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
+            try
+            {
+                var result = new OrderDetailViewModel();
+
+                result.CustId = Int32.Parse(orderData.CustName);
+                result.EmpId = Int32.Parse(orderData.EmpName);
+                result.OrderDate = orderData.OrderDate;
+                result.RequiredDate = orderData.RequiredDate;
+                result.ShippedDate = orderData.ShippedDate;
+                result.ShipperId = Int32.Parse(orderData.ShipperName);
+                result.OrderId = orderData.OrderId;
+                result.Freight = orderData.Freight == null ? 0 : orderData.Freight;
+                result.ShipCountry = orderData.ShipCountry == null ? string.Empty : orderData.ShipCountry;
+                result.ShipCity = orderData.ShipCity == null ? string.Empty : orderData.ShipCity;
+                result.ShipRegion = orderData.ShipRegion == null ? string.Empty : orderData.ShipRegion;
+                result.ShipPostalCode = orderData.ShipPostalCode == null ? string.Empty : orderData.ShipPostalCode;
+                result.ShipAddress = orderData.ShipAddress == null ? string.Empty : orderData.ShipAddress;
+                result.ShipName = orderData.ShipName == null ? string.Empty : orderData.ShipName;
+                result.Products = orderData.Products;
+                
+                var msg = orderService.UpdateOrder(result);
+
+                return this.Json(msg, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Describe = "尚未填寫完成";
+                error.State = false;
+
+                return this.Json(error, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        /// <summary>
+        /// 修改訂單資訊
+        /// </summary>
+        /// <param name="orderData">訂單資訊</param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult DeleteOrder(OrderDetailViewModel orderData)
+        {
+            var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
+            try
+            {
+                var result = new OrderDetailViewModel();
+                
+                result.OrderId = orderData.OrderId;
+
+                var msg = orderService.DeleteOrder(result);
+
+                return this.Json(msg, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var error = new eSaleModel.ViewModel.ErrorMsg();
+                error.Describe = "尚未填寫完成";
+                error.State = false;
+
+                return this.Json(error, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
 
 
 

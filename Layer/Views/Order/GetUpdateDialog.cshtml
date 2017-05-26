@@ -21,11 +21,11 @@
         </tr>
         <tr>
             <th>
-                @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
             </th>
             <th>
-                @Html.TextBoxFor(model => model.Orderdate, new { @type = "date", @Value = ViewBag.Orderdate.ToString("yyyy-MM-dd") })
-                @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.OrderDate, new { @type = "date", @Value = ViewBag.OrderDate.ToString("yyyy-MM-dd") })
+                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
             </th>
             <th>
                 @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })

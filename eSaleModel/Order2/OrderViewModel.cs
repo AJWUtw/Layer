@@ -10,7 +10,7 @@ namespace eSaleModel.Order2
     {
         public int OrderId { get; set; }
         public string CustName { get; set; }
-        public DateTime? Orderdate { get; set; }
+        public DateTime? OrderDate { get; set; }
         public DateTime? ShippedDate { get; set; }
         
     }

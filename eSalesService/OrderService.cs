@@ -70,10 +70,10 @@ namespace eSalesService
                     CustId = (int)row["CustomerId"],
                     CustName = row["CompanyName"].ToString(),
                     EmpId = (int)row["EmployeeId"],
-                    O_Orderdate = row["Orderdate"].ToString(),
+                    O_Orderdate = row["OrderDate"].ToString(),
                     O_ShippedDate = row["ShippedDate"].ToString(),
                     O_RequiredDate = row["RequiredDate"].ToString(),
-                    Orderdate = (DateTime)row["Orderdate"],
+                    OrderDate = (DateTime)row["OrderDate"],
                     ShippedDate = (DateTime)row["ShippedDate"],
                     RequiredDate = (DateTime)row["RequiredDate"],
                     ShipperId = (int)row["ShipperId"],
@@ -120,7 +120,7 @@ namespace eSalesService
                 {
                     OrderId = (int)row["OrderId"],
                     CustName = row["CompanyName"].ToString(),
-                    O_Orderdate = row["Orderdate"].ToString(),
+                    O_Orderdate = row["OrderDate"].ToString(),
                     O_ShippedDate = row["ShippedDate"].ToString(),
 
                 });

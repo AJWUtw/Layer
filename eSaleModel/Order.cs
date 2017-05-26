@@ -60,7 +60,7 @@ namespace eSaleModel
         /// </summary>
         [DisplayName("訂單日期")]
         [Required()]
-        public DateTime? Orderdate { get; set; }
+        public DateTime? OrderDate { get; set; }
 
         /// <summary>
         /// 需要日期

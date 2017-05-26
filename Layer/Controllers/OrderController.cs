@@ -70,7 +70,7 @@ namespace Layer.Controllers
             orderData = orderService.GetOrderById(id);
 
             ViewBag.OrderId = orderData.OrderId;
-            ViewBag.Orderdate = orderData.Orderdate;
+            ViewBag.OrderDate = orderData.OrderDate;
             ViewBag.RequiredDate = orderData.RequiredDate;
             ViewBag.ShippedDate = orderData.ShippedDate;
             ViewBag.Freight = orderData.Freight;
@@ -168,7 +168,7 @@ namespace Layer.Controllers
             result.CustName = "%" + null + "%";
             result.EmpId = 0;
             result.ShipperId = 0;
-            result.Orderdate = null;
+            result.OrderDate = null;
             result.RequiredDate = null;
             result.ShippedDate = null;
 
@@ -224,7 +224,7 @@ namespace Layer.Controllers
             result.CustName = "%" + (condition.CustName)+ "%" ;
             result.EmpId = condition.EmpName == null ? 0 : Int32.Parse(condition.EmpName) ;
             result.ShipperId = condition.ShipperName == null ? 0 : Int32.Parse(condition.ShipperName);
-            result.Orderdate = condition.Orderdate;
+            result.OrderDate = condition.OrderDate;
             result.RequiredDate = condition.RequiredDate;
             result.ShippedDate = condition.ShippedDate;
 
@@ -249,7 +249,7 @@ namespace Layer.Controllers
                 
                 result.CustId = Int32.Parse(orderData.CustName);
                 result.EmpId = Int32.Parse(orderData.EmpName);
-                result.Orderdate = orderData.Orderdate;
+                result.OrderDate = orderData.OrderDate;
                 result.RequiredDate = orderData.RequiredDate;
                 result.ShippedDate = orderData.ShippedDate;
                 result.ShipperId = Int32.Parse(orderData.ShipperName);
@@ -341,7 +341,7 @@ namespace Layer.Controllers
                 result.OrderId = orderData.OrderId;
                 result.CustId = Int32.Parse(orderData.CustName);
                 result.EmpId = Int32.Parse(orderData.EmpName);
-                result.Orderdate = orderData.Orderdate;
+                result.OrderDate = orderData.OrderDate;
                 result.RequiredDate = orderData.RequiredDate;
                 result.ShippedDate = orderData.ShippedDate;
                 result.ShipperId = Int32.Parse(orderData.ShipperName);

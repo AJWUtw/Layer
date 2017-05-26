@@ -53,7 +53,7 @@ namespace eSaleDao
         public DataTable GetOrderDetailById(int id)
         {
             DataTable dt = new DataTable();
-            string sql = @"SELECT * FROM Sales.OrderDetails WHERE OrderId=@OrderId ";
+            string sql = @"SELECT * FROM Sales.OrderDetails a JOIN Production.Products b ON a.ProductID = b.ProductID WHERE OrderId=@OrderId ";
             using (SqlConnection conn = new SqlConnection(this.DbConn))
             {
                 conn.Open();
@@ -98,7 +98,7 @@ namespace eSaleDao
                                                             (b.CompanyName LIKE @CustName OR @CustName IS NULL ) AND
                                                             (EmployeeId = @EmpId OR @EmpId = 0 ) AND
                                                             (ShipperId=@ShipperId OR @ShipperId = 0 ) AND
-                                                            (Orderdate=@Orderdate OR @Orderdate = '1780-01-01' ) AND
+                                                            (OrderDate=@OrderDate OR @OrderDate = '1780-01-01' ) AND
                                                             (RequiredDate=@RequiredDate OR @RequiredDate = '1780-01-01' ) AND
                                                             (ShippedDate=@ShippedDate OR @ShippedDate = '1780-01-01' ) ";
             using (SqlConnection conn = new SqlConnection(this.DbConn))
@@ -109,7 +109,7 @@ namespace eSaleDao
                 cmd.Parameters.Add(new SqlParameter("@CustName", condition.CustName == null ? string.Empty : condition.CustName));
                 cmd.Parameters.Add(new SqlParameter("@EmpId", condition.EmpId == null ? 0 : condition.EmpId));
                 cmd.Parameters.Add(new SqlParameter("@ShipperId", condition.ShipperId == null ? 0 : condition.ShipperId));
-                cmd.Parameters.Add(new SqlParameter("@Orderdate", condition.Orderdate == null ? Convert.ToDateTime("1780-01-01") : condition.Orderdate));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", condition.OrderDate == null ? Convert.ToDateTime("1780-01-01") : condition.OrderDate));
                 cmd.Parameters.Add(new SqlParameter("@RequiredDate", condition.RequiredDate == null ? Convert.ToDateTime("1780-01-01") : condition.RequiredDate));
                 cmd.Parameters.Add(new SqlParameter("@ShippedDate", condition.ShippedDate == null ? Convert.ToDateTime("1780-01-01") : condition.ShippedDate));
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
@@ -133,7 +133,7 @@ namespace eSaleDao
                     OUTPUT INSERTED.OrderID 
 						VALUES
 						(
-							@CustomerID,@EmployeeID,@Orderdate,@Requireddate,@Shippeddate,@Shipperid,@Freight,
+							@CustomerID,@EmployeeID,@OrderDate,@Requireddate,@Shippeddate,@Shipperid,@Freight,
 							@Shipname,@Shipaddress,@Shipcity,@Shipregion,@Shippostalcode,@Shipcountry
 						)
 						";
@@ -144,7 +144,7 @@ namespace eSaleDao
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
                 cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
-                cmd.Parameters.Add(new SqlParameter("@Orderdate", order.Orderdate));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
                 cmd.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
                 cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
                 cmd.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
@@ -253,7 +253,7 @@ namespace eSaleDao
                     command.CommandText = sql_1;
                     command.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
                     command.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
-                    command.Parameters.Add(new SqlParameter("@Orderdate", order.Orderdate));
+                    command.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
                     command.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
                     command.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
                     command.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
@@ -328,7 +328,7 @@ namespace eSaleDao
             string sql = @" Update Sales.Orders SET
 							    CustomerID=@CustomerID,
                                 EmployeeID=@EmployeeID,
-                                orderdate=@Orderdate,
+                                orderdate=@OrderDate,
                                 requireddate=@Requireddate,
                                 shippeddate=@Shippeddate,
                                 shipperid=@Shipperid,
@@ -347,7 +347,7 @@ namespace eSaleDao
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
                 cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
-                cmd.Parameters.Add(new SqlParameter("@Orderdate", order.Orderdate));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
                 cmd.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
                 cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
                 cmd.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
@@ -364,6 +364,136 @@ namespace eSaleDao
                     var aa = cmd.ExecuteNonQuery();
                     return aa;
                
+            }
+
+        }
+
+
+        /// <summary>
+        /// 新增訂單資料 SqlTransaction.Rollback
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public Boolean UpdateOrderInSqlTrans(eSaleModel.Order2.OrderDetailViewModel order)
+        {
+            string sql_1 = @" Update Sales.Orders SET
+							    CustomerID=@CustomerID,
+                                EmployeeID=@EmployeeID,
+                                orderdate=@OrderDate,
+                                requireddate=@Requireddate,
+                                shippeddate=@Shippeddate,
+                                shipperid=@Shipperid,
+                                freight=@Freight,
+							    shipname=@Shipname,
+                                shipaddress=@Shipaddress,
+                                shipcity=@Shipcity,
+                                shipregion=@Shipregion,
+                                shippostalcode=@Shippostalcode,
+                                shipcountry=@Shipcountry 
+                                WHERE OrderId=@OrderId ";
+            string sql_2 = @"DELETE FROM Sales.OrderDetails WHERE OrderId=@OrderId";
+            string sql_3 = @" Insert INTO Sales.OrderDetails
+						 (
+							OrderID,ProductID,UnitPrice,Qty,Discount
+						)
+						VALUES
+						(
+							@OrderID,@ProductID,@UnitPrice,@Qty,@Discount
+						)";
+            int orderId = 0;
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+
+                SqlCommand command = conn.CreateCommand();
+                SqlTransaction transaction;
+
+                // Start a local transaction.
+                transaction = conn.BeginTransaction("SampleTransaction");
+
+                // Must assign both transaction object and connection
+                // to Command object for a pending local transaction
+                command.Connection = conn;
+                command.Transaction = transaction;
+
+                try
+                {
+                    command.CommandText = sql_1;
+                    command.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
+                    command.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
+                    command.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
+                    command.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
+                    command.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
+                    command.Parameters.Add(new SqlParameter("@Freight", order.Freight));
+                    command.Parameters.Add(new SqlParameter("@Shipname", order.ShipName));
+                    command.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
+                    command.Parameters.Add(new SqlParameter("@ShipCity", order.ShipCity));
+                    command.Parameters.Add(new SqlParameter("@ShipRegion", order.ShipRegion));
+                    command.Parameters.Add(new SqlParameter("@ShipPostalCode", order.ShipPostalCode));
+                    command.Parameters.Add(new SqlParameter("@ShipCountry", order.ShipCountry));
+                    command.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+
+                    command.ExecuteScalar();
+
+
+                    command.CommandText = sql_2;
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+                    command.ExecuteScalar();
+
+
+                    command.CommandText = sql_3;
+
+                    if (order.Products.Count > 0)
+                    {
+                        for (int i = 0; i < order.Products.Count; i++)
+                        {
+                            if (order.Products[i].Qty > 0)
+                            {
+                                command.Parameters.Clear();
+                                command.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+                                command.Parameters.Add(new SqlParameter("@ProductID", order.Products[i].ProductName.ProductId));
+                                command.Parameters.Add(new SqlParameter("@UnitPrice", order.Products[i].UnitPrice));
+                                command.Parameters.Add(new SqlParameter("@Qty", order.Products[i].Qty));
+                                command.Parameters.Add(new SqlParameter("@Discount", order.Products[i].Discount == null ? false : order.Products[i].Discount));
+
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+
+                    // Attempt to commit the transaction.
+                    transaction.Commit();
+                    Console.WriteLine("Both records are written to database.");
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+
+                    // Attempt to roll back the transaction.
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        // This catch block will handle any errors that may have occurred
+                        // on the server that would cause the rollback to fail, such as
+                        // a closed connection.
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        return false;
+
+                    }
+
+                    return false;
+                }
+
+                conn.Close();
             }
 
         }
@@ -418,5 +548,79 @@ namespace eSaleDao
             }
 
         }
+
+
+        /// <summary>
+        /// 刪除訂單資料
+        /// </summary>
+        /// <param name="orderDetail"></param>
+        public Boolean DeleteOrderInSqlTran(eSaleModel.Order2.OrderDetailViewModel order)
+        {
+            string sql_1 = @"DELETE FROM Sales.OrderDetails WHERE OrderId=@OrderId";
+            string sql_2 = @"DELETE FROM Sales.Orders WHERE OrderId=@OrderId";
+
+            int orderId = 0;
+            using (SqlConnection conn = new SqlConnection(this.DbConn))
+            {
+                conn.Open();
+
+                SqlCommand command = conn.CreateCommand();
+                SqlTransaction transaction;
+
+                // Start a local transaction.
+                transaction = conn.BeginTransaction("SampleTransaction");
+
+                // Must assign both transaction object and connection
+                // to Command object for a pending local transaction
+                command.Connection = conn;
+                command.Transaction = transaction;
+
+                try
+                {
+                    command.CommandText = sql_1;
+                    command.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+                    command.ExecuteScalar();
+
+                    command.CommandText = sql_2;
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+                    command.ExecuteScalar();
+
+                    // Attempt to commit the transaction.
+                    transaction.Commit();
+                    Console.WriteLine("Both records are written to database.");
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+
+                    // Attempt to roll back the transaction.
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        // This catch block will handle any errors that may have occurred
+                        // on the server that would cause the rollback to fail, such as
+                        // a closed connection.
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        return false;
+
+                    }
+
+                    return false;
+                }
+
+                conn.Close();
+            }
+
+        }
+
+
     }
 }

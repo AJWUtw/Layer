@@ -20,7 +20,7 @@
     
     <div id="example">
         <form id="searchOrderCondition" enctype="multipart/form-data">
-            <table>
+            <table  style="width:80%">
                 <tr>
                     <th>
                         @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -57,11 +57,11 @@
                 </tr>
                 <tr>
                     <th>
-                        @Html.LabelFor(model => model.Orderdate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
                     </th>
                     <th>
-                        @Html.TextBoxFor(model => model.Orderdate, new { @type = "date" })
-                        @Html.ValidationMessageFor(model => model.Orderdate, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
                     </th>
                 </tr>
                 <tr>
@@ -95,15 +95,15 @@
         <div id="grid"></div>
     </div>
     <div id="insertDialog"  style="overflow:auto">
-        <div class="demo-section k-content">
+        <div class="demo-section k-content" id="content">
             <form id="insertForm" data-role="validator" novalidate="novalidate">
                 <table>
                     <tr>
                         <td>
-                            <label>客戶名稱</label>
+                            <label style="width:100%">客戶名稱</label>
                         </td>
                         <td>
-                            <input id="EmpName" name="EmpName"  class="customers" />
+                            <input id="CustName" name="CustName" class="employees" />
                         </td>
                     </tr>
                     <tr>
@@ -111,7 +111,7 @@
                             <label>負責員工名稱</label>
                         </td>
                         <td>
-                            <input id="CustName" name="CustName" class="employees" />
+                            <input id="EmpName" name="EmpName" class="customers"  /> 
                         </td>
                     </tr>
                     <tr>
@@ -144,7 +144,9 @@
                             <label>出貨公司名稱</label>
                         </td>
                         <td>
-                            <input id="ShipperName" name="ShipperName" class="shippers" />
+                            <div id="Shipper">
+                                <input id="ShipperName" name="ShipperName" class="shippers" />
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -201,10 +203,118 @@
             </form>
             <button id="insert" class="k-primary" data-role="button">新增</button>
             <div id='insertList'></div>
-        </div>  
-
-
+        </div>
     </div>
-    <div id="updateDialog"></div>
+    <div id="updateDialog">
+    </div>
+
+    <script type="text/x-kendo-template" id="orderTemplate">
+        <form id="updateForm" data-role="validator" novalidate="novalidate">
+            <table>
+                <tr>
+                    <td>
+                        <label style="width:80px">客戶名稱</label>
+                    </td>
+                    <td>
+                        <input id="updateCustName" name="CustName" class="employees" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>負責員工名稱</label>
+                    </td>
+                    <td>
+                        <input id="updateEmpName" name="EmpName" class="customers" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="OrderDate">訂單日期</label>
+                    </td>
+                    <td>
+                        <input type="text" data-role='datepicker' name="OrderDate" data-type="date" required="required" />
+                        <span data-for='OrderDate' class='k-invalid-msg'></span>
+                    </td>
+                    <td>
+                        <label for="RequiredDate" style="width:80px">需要日期</label>
+                    </td>
+                    <td>
+                        <input type="text" data-role='datepicker' data-type="date" name="RequiredDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Required Date should be after Order date ' />
+                        <span data-for='RequiredDate' class='k-invalid-msg'></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ShippedDate">出貨日期</label>
+                    </td>
+                    <td>
+                        <input type="text" data-role='datepicker' data-type="date" name="ShippedDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
+                        <span data-for='ShippedDate' class='k-invalid-msg'></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>出貨公司名稱</label>
+                    </td>
+                    <td>
+                        <input id="updateShipperName"  name="ShipperName" class="shippers" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Freight">運費</label>
+                    </td>
+                    <td>
+                        <input type="number" title="Freight" value="0" min="0" max="100" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ShipCountry">出貨國家</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipCountry" />
+                    </td>
+                    <td>
+                        <label for="ShipCity">出貨城市</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipCity" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ShipRegion">出貨地區</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipRegion" />
+                    </td>
+                    <td>
+                        <label for="ShipPostalCode">郵遞區號</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipPostalCode" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ShipAddress">出貨地址</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipAddress" />
+                    </td>
+                    <td>
+                        <label for="ShipName">出貨說明</label>
+                    </td>
+                    <td>
+                        <input type="text" class="k-textbox" name="ShipName" id="ShipName" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div id='updateList'></div>
+    </script>
+
+
 </body>
 </html>

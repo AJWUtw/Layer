@@ -45,7 +45,7 @@ namespace eSalesService
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<eSaleModel.OrderDetails> GetOrderDetailById(int id)
+        public List<OrderProductViewModel> GetOrderDetailById(int id)
         {
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
             var datalist = orderDao.GetOrderDetailById(id);
@@ -53,16 +53,16 @@ namespace eSalesService
             return this.MapOrderDetailData(datalist);
         }
 
-        public List<OrderViewModel> GetOrder()
+        public List<eSaleModel.Order> GetOrder()
         {
             List<eSaleModel.Order> result = new List<eSaleModel.Order>();
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
             var datalist = orderDao.GetOrder();
 
-            return this.MapOrderStore(datalist);
+            return this.MapOrderData(datalist);
 
         }
-        public List<OrderViewModel> GetOrderByCondition(eSaleModel.Order condition)
+        public List<eSaleModel.Order> GetOrderByCondition(eSaleModel.Order condition)
         {
             List<eSaleModel.Order> result = new List<eSaleModel.Order>();
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
@@ -97,118 +97,117 @@ namespace eSalesService
 
             foreach (DataRow row in orderData.Rows)
             {
-                result.Add(new eSaleModel.Order()
+                try
                 {
-                    OrderId = (int)row["OrderId"],
-                    CustId = (int)row["CustomerId"],
-                    CustName = row["CompanyName"].ToString(),
-                    EmpId = (int)row["EmployeeId"],
-                    O_Orderdate = row["Orderdate"].ToString(),
-                    O_ShippedDate = row["ShippedDate"].ToString(),
-                    O_RequiredDate = row["RequiredDate"].ToString(),
-                    Orderdate = (DateTime)row["Orderdate"],
-                    ShippedDate = (DateTime)row["ShippedDate"],
-                    RequiredDate = (DateTime)row["RequiredDate"],
-                    ShipperId = (int)row["ShipperId"],
-                    Freight = (decimal)row["Freight"],
+                    result.Add(new eSaleModel.Order()
+                    {
+                        OrderId = (int)row["OrderId"] == null ? 0 : (int)row["OrderId"],
+                        CustId = (int)row["CustomerId"] == null ? 0 : (int)row["CustomerId"],
+                        CustName = String.IsNullOrEmpty(row["CompanyName"].ToString()) ? "" : row["CompanyName"].ToString(),
+                        EmpId = (int)row["EmployeeId"] == null ? 0 : (int)row["EmployeeId"],
+                        OrderDate = row["OrderDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["Orderdate"],
+                        ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"],
+                        RequiredDate = row["RequiredDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["RequiredDate"],
+                        ShipperId = (int)row["ShipperId"] == null ? 0 : (int)row["ShipperId"],
+                        Freight = (decimal)row["Freight"] == null ? 0 : (decimal)row["Freight"],
 
-                    ShipName = String.IsNullOrEmpty(row["ShipName"].ToString()) ? "" : row["ShipName"].ToString(),
-                    ShipAddress = row["ShipAddress"].ToString(),
-                    ShipCity = row["ShipCity"].ToString(),
-                    ShipRegion = row["ShipRegion"].ToString(),
-                    ShipPostalCode = row["ShipPostalCode"].ToString(),
-                    ShipCountry = row["ShipCountry"].ToString()
+                        ShipName = String.IsNullOrEmpty(row["ShipName"].ToString()) ? "" : row["ShipName"].ToString(),
+                        ShipAddress = String.IsNullOrEmpty(row["ShipAddress"].ToString()) ? "" : row["ShipAddress"].ToString(),
+                        ShipCity = String.IsNullOrEmpty(row["ShipCity"].ToString()) ? "" : row["ShipCity"].ToString(),
+                        ShipRegion = String.IsNullOrEmpty(row["ShipRegion"].ToString()) ? "" : row["ShipRegion"].ToString(),
+                        ShipPostalCode = String.IsNullOrEmpty(row["ShipPostalCode"].ToString()) ? "" : row["ShipPostalCode"].ToString(),
+                        ShipCountry = String.IsNullOrEmpty(row["ShipCountry"].ToString()) ? "" : row["ShipCountry"].ToString()
 
-                });
+                    });
+                }
+                catch (Exception e)
+                {
+                    var aa = e;
+
+                }
+                
             }
-            var aa = result;
             return result;
         }
 
-        private List<eSaleModel.OrderDetails> MapOrderDetailData(DataTable orderDetailData)
+        private List<OrderProductViewModel> MapOrderDetailData(DataTable orderDetailData)
         {
-            List<eSaleModel.OrderDetails> result = new List<eSaleModel.OrderDetails>();
+            List<OrderProductViewModel> result = new List<OrderProductViewModel>();
 
             foreach (DataRow row in orderDetailData.Rows)
             {
-                result.Add(new eSaleModel.OrderDetails()
+                PName ProductName = new PName();
+                ProductName.ProductId = (int)row["ProductId"];
+                ProductName.ProductName = row["ProductName"].ToString();
+                result.Add(new OrderProductViewModel()
                 {
-                    OrderId = (int)row["OrderId"],
-                    ProductName= (int)row["ProductId"],
+                    
+                    ProductName = ProductName,
                     UnitPrice = (decimal)row["UnitPrice"],
                     Qty = (Int16)row["Qty"],
-                    Sum = (Int16)row["Qty"] * (decimal)row["UnitPrice"]
+                    Sum = (Int16)row["Qty"] * (int)(decimal)row["UnitPrice"]
 
                 });
             }
             return result;
         }
-        private List<OrderViewModel> MapOrderStore(DataTable orderData)
+        private List<eSaleModel.Order> MapOrderStore(DataTable orderData)
         {
-            List<OrderViewModel> result = new List<OrderViewModel>();
+            List<eSaleModel.Order> result = new List<eSaleModel.Order>();
 
             foreach (DataRow row in orderData.Rows)
             {
-                result.Add(new OrderViewModel()
+                result.Add(new eSaleModel.Order()
                 {
-                    OrderId = (int)row["OrderId"],
-                    CustName = row["CompanyName"].ToString(),
-                    Orderdate = row["Orderdate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["Orderdate"],
+                    OrderId = (int)row["OrderId"] == null ? 0 : (int)row["OrderId"],
+                    CustId = (int)row["CustomerId"] == null ? 0 : (int)row["CustomerId"],
+                    CustName = String.IsNullOrEmpty(row["CompanyName"].ToString()) ? "" : row["CompanyName"].ToString(),
+                    EmpId = (int)row["EmployeeId"] == null ? 0 : (int)row["EmployeeId"],
+                    OrderDate = row["OrderDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["Orderdate"],
                     ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"],
+                    RequiredDate = row["RequiredDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["RequiredDate"],
+                    ShipperId = (int)row["ShipperId"] == null ? 0 : (int)row["ShipperId"],
+                    Freight = (decimal)row["Freight"] == null ? 0 : (decimal)row["Freight"],
+
+                    ShipName = String.IsNullOrEmpty(row["ShipName"].ToString()) ? "" : row["ShipName"].ToString(),
+                    ShipAddress = String.IsNullOrEmpty(row["ShipAddress"].ToString()) ? "" : row["ShipAddress"].ToString(),
+                    ShipCity = String.IsNullOrEmpty(row["ShipCity"].ToString()) ? "" : row["ShipCity"].ToString(),
+                    ShipRegion = String.IsNullOrEmpty(row["ShipRegion"].ToString()) ? "" : row["ShipRegion"].ToString(),
+                    ShipPostalCode = String.IsNullOrEmpty(row["ShipPostalCode"].ToString()) ? "" : row["ShipPostalCode"].ToString(),
+                    ShipCountry = String.IsNullOrEmpty(row["ShipCountry"].ToString()) ? "" : row["ShipCountry"].ToString()
 
                 });
             }
             return result;
         }
+        
 
         /// <summary>
-        /// 新增訂單資料
+        /// 修改訂單資料
         /// </summary>
         /// <param name="data">訂單資料</param>
         /// <returns></returns>
-        public int InsertOrder(eSaleModel.Order data)
+        public Boolean UpdateOrder(OrderDetailViewModel data)
         {
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
-            return orderDao.InsertOrder(data);
+
+            return orderDao.UpdateOrderInSqlTrans(data);
+
         }
 
         /// <summary>
-        /// 新增訂單明細
+        /// 刪除訂單
         /// </summary>
         /// <param name="data">訂單明細</param>
         /// <returns></returns>
-        public void InsertOrderDetail(eSaleModel.OrderDetails data)
+        public Boolean DeleteOrder(OrderDetailViewModel data)
         {
             eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
-            orderDao.InsertOrderDetail(data);
+            return orderDao.DeleteOrderInSqlTran(data);
             
         }
-
         /// <summary>
-        /// 新增訂單資料
-        /// </summary>
-        /// <param name="data">訂單資料</param>
-        /// <returns></returns>
-        public int UpdateOrder(eSaleModel.Order data)
-        {
-            eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
-            return orderDao.UpdateOrder(data);
-
-        }
-
-        /// <summary>
-        /// 新增訂單明細
-        /// </summary>
-        /// <param name="data">訂單明細</param>
-        /// <returns></returns>
-        public void DeleteOrder(eSaleModel.OrderDetails data)
-        {
-            eSaleDao.OrderDao orderDao = new eSaleDao.OrderDao(this.DbConn);
-            orderDao.DeleteOrder(data);
-
-        }
-        /// <summary>
-        /// 新增訂單明細
+        /// 刪除訂單明細
         /// </summary>
         /// <param name="data">訂單明細</param>
         /// <returns></returns>
