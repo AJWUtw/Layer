@@ -4,13 +4,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.metro.min.css" rel="stylesheet" />
-    @*<link href="~/Styles/kendo.css" rel="stylesheet" />*@
-    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/jquery.min.js"></script>
-    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/kendo.all.min.js"></script>
 
-    <script src="~/Scripts/kendoUI.js"></script>
     @*<script src="~/Scripts/events.js"></script>*@
     
 
@@ -20,67 +14,66 @@
     
     <div id="example">
         <form id="searchOrderCondition" enctype="multipart/form-data">
-            <table  style="width:80%">
+            <table   class="table table-striped">
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
+                    <td>
+                        @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
                         @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @name = "", @class = "form-control", @min = "0", @step = "1", @value = 0 } })
                         @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
-                    </th>
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input id="CustName" name="CustName" class="k-textbox"  class="customers"  />
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.DropDownListFor(model => model.EmpName, (List<SelectListItem>)ViewBag.EmpNameData, "尚未選擇")
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input id="EmpName" name="EmpName" class="employees" />
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.DropDownListFor(model => model.ShipperName, (List<SelectListItem>)ViewBag.ShipperNameData, "尚未選擇")
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input id="ShipperName" name="ShipperName" class="shippers" />
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
-                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input  data-role='datepicker' id="OrderDate" name="OrderDate" data-type="date"  />
+                        <span data-for='OrderDate' class='k-invalid-msg'></span>
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.TextBoxFor(model => model.RequiredDate, new { @type = "date", @value = "{0:yyyy-MM-dd}" })
-                        @Html.ValidationMessageFor(model => model.RequiredDate, "", new { @class = "text-danger" })
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input  data-role='datepicker' id="RequiredDate" data-type="date"  name="RequiredDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Required Date should be after Order date ' />
+                        <span data-for='RequiredDate' class='k-invalid-msg'></span>
+                    </td>
                 </tr>
                 <tr>
-                    <th>
-                        @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </th>
-                    <th>
-                        @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
-                        @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
-                    </th>
+                    <td>
+                        @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2", style = "width: 200px;" })
+                    </td>
+                    <td>
+                        <input  data-role='datepicker' id="ShippedDate" data-type="date" name="ShippedDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
+                        <span data-for='ShippedDate' class='k-invalid-msg'></span>
+                    </td>
                 </tr>
             </table>
 
@@ -94,59 +87,58 @@
 
         <div id="grid"></div>
     </div>
-    <div id="insertDialog"  style="overflow:auto">
+
+    <div id="insertDialog" style="overflow:auto">
         <div class="demo-section k-content" id="content">
-            <form id="insertForm" data-role="validator" novalidate="novalidate">
+            <form id="insertForm" data-role="validator">
                 <table>
                     <tr>
                         <td>
-                            <label style="width:100%">客戶名稱</label>
+                            <label style="width:100%"><span class="required" >*</span>客戶名稱</label>
                         </td>
                         <td>
-                            <input id="CustName" name="CustName" class="employees" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>負責員工名稱</label>
-                        </td>
-                        <td>
-                            <input id="EmpName" name="EmpName" class="customers"  /> 
+                            <input id="InsertCustName" name="CustName" class="customers" required />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label for="OrderDate">訂單日期</label>
+                            <label><span class="required">*</span>負責員工名稱</label>
                         </td>
                         <td>
-                            <input type="text" data-role='datepicker' id="OrderDate" name="OrderDate" data-type="date" required="required" />
-                            <span data-for='OrderDate' class='k-invalid-msg'></span>
-                        </td>
-                        <td>
-                            <label for="RequiredDate">需要日期</label>
-                        </td>
-                        <td>
-                            <input type="text" data-role='datepicker' id="RetireDate" data-type="date" name="RequiredDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Required Date should be after Order date ' />
-                            <span data-for='RequiredDate' class='k-invalid-msg'></span>
+                            <input id="InsertEmpName" name="EmpName" class="employees" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label for="ShippedDate">出貨日期</label>
+                            <label for="InsertOrderDate"><span class="required">*</span>訂單日期</label>
                         </td>
                         <td>
-                            <input type="text" data-role='datepicker' id="ShippedDate" data-type="date" name="ShippedDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
-                            <span data-for='ShippedDate' class='k-invalid-msg'></span>
+                            <input type="text" data-role='datepicker' id="InsertOrderDate" name="OrderDate" data-type="date" required="required" />
+                            <span data-for='InsertOrderDate' class='k-invalid-msg'></span>
+                        </td>
+                        <td>
+                            <label for="InsertRequiredDate"><span class="required">*</span>需要日期</label>
+                        </td>
+                        <td>
+                            <input type="text" data-role='datepicker' id="InsertRequiredDate" data-type="date" required="required" name="RequiredDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Required Date should be after Order date ' />
+                            <span data-for='InsertRequiredDate' class='k-invalid-msg'></span>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label>出貨公司名稱</label>
+                            <label for="InsertShippedDate"><span class="required">*</span>出貨日期</label>
                         </td>
                         <td>
-                            <div id="Shipper">
-                                <input id="ShipperName" name="ShipperName" class="shippers" />
-                            </div>
+                            <input type="text" data-role='datepicker' id="InsertShippedDate" data-type="date" required="required" name="ShippedDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
+                            <span data-for='InsertShippedDate' class='k-invalid-msg'></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label><span class="required">*</span>出貨公司名稱</label>
+                        </td>
+                        <td>
+                            <input id="InsertShipperName" name="ShipperName" class="shippers" />
                         </td>
                     </tr>
                     <tr>
@@ -154,7 +146,7 @@
                             <label for="Freight">運費</label>
                         </td>
                         <td>
-                            <input id="Freight" type="number" title="Freight" value="0" min="0" max="100" />
+                            <input id="Freight" type="number" name="Freight" title="Freight" value="0" min="0" max="100" />
                         </td>
                     </tr>
                     <tr>
@@ -208,112 +200,8 @@
     <div id="updateDialog">
     </div>
 
-    <script type="text/x-kendo-template" id="orderTemplate">
-        <form id="updateForm" data-role="validator" novalidate="novalidate">
-            <table>
-                <tr>
-                    <td>
-                        <label style="width:80px">客戶名稱</label>
-                    </td>
-                    <td>
-                        <input id="updateCustName" name="CustName" class="employees" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>負責員工名稱</label>
-                    </td>
-                    <td>
-                        <input id="updateEmpName" name="EmpName" class="customers" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="OrderDate">訂單日期</label>
-                    </td>
-                    <td>
-                        <input type="text" data-role='datepicker' name="OrderDate" data-type="date" required="required" />
-                        <span data-for='OrderDate' class='k-invalid-msg'></span>
-                    </td>
-                    <td>
-                        <label for="RequiredDate" style="width:80px">需要日期</label>
-                    </td>
-                    <td>
-                        <input type="text" data-role='datepicker' data-type="date" name="RequiredDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Required Date should be after Order date ' />
-                        <span data-for='RequiredDate' class='k-invalid-msg'></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="ShippedDate">出貨日期</label>
-                    </td>
-                    <td>
-                        <input type="text" data-role='datepicker' data-type="date" name="ShippedDate" data-greaterdate-field="OrderDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
-                        <span data-for='ShippedDate' class='k-invalid-msg'></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>出貨公司名稱</label>
-                    </td>
-                    <td>
-                        <input id="updateShipperName"  name="ShipperName" class="shippers" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Freight">運費</label>
-                    </td>
-                    <td>
-                        <input type="number" title="Freight" value="0" min="0" max="100" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="ShipCountry">出貨國家</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipCountry" />
-                    </td>
-                    <td>
-                        <label for="ShipCity">出貨城市</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipCity" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="ShipRegion">出貨地區</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipRegion" />
-                    </td>
-                    <td>
-                        <label for="ShipPostalCode">郵遞區號</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipPostalCode" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="ShipAddress">出貨地址</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipAddress" />
-                    </td>
-                    <td>
-                        <label for="ShipName">出貨說明</label>
-                    </td>
-                    <td>
-                        <input type="text" class="k-textbox" name="ShipName" id="ShipName" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-        <div id='updateList'></div>
-    </script>
+    <div id="updateWindow"></div>
+
 
 
 </body>

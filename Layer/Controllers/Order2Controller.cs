@@ -33,11 +33,50 @@ namespace Layer.Controllers
         {
             var orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
             
-
             var data = orderService.GetOrder();
 
             return this.Json(data, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 取得修改視窗
+        /// </summary>
+        /// <param name="id">訂單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetUpdateDialog(int id)
+        {
+            eSalesService.Order2Service orderService = new eSalesService.Order2Service(this.GetDBConnectionString());
+            eSalesService.EmpService empService = new eSalesService.EmpService(this.GetDBConnectionString());
+            eSalesService.CusService cusService = new eSalesService.CusService(this.GetDBConnectionString());
+            eSalesService.ShipService shipService = new eSalesService.ShipService(this.GetDBConnectionString());
+            eSaleModel.Order orderData = new eSaleModel.Order();
+
+            var data = orderService.GetOrderById(id);
+
+            ViewBag.OrderId = data.OrderId;
+            ViewBag.OrderDate = data.OrderDate;
+            ViewBag.RequiredDate = data.RequiredDate;
+            ViewBag.ShippedDate = data.ShippedDate;
+            ViewBag.Freight = data.Freight;
+            ViewBag.ShipCountry = data.ShipCountry;
+            ViewBag.ShipCity = data.ShipCity;
+            ViewBag.ShipRegion = data.ShipRegion;
+            ViewBag.ShipPostalCode = data.ShipPostalCode;
+            ViewBag.ShipAddress = data.ShipAddress;
+            ViewBag.ShipName = data.ShipAddress;
+            ViewBag.EmpId = data.EmpId;
+            ViewBag.CustId = data.CustId;
+            ViewBag.ShipperId = data.ShipperId;
+
+            //ViewBag.OrderId = "updateProductGrid" + id;
+
+            //ViewBag.EmpNameData = new SelectList(empService.GetEmpNameData(), "Value", "Text", orderData.EmpId);
+            //ViewBag.CustNameData = new SelectList(cusService.GetCusNameData(), "Value", "Text", orderData.CustId);
+            //ViewBag.ShipperNameData = new SelectList(shipService.GetShipperNameData(), "Value", "Text", orderData.ShipperId);
+
+            return PartialView();
+        }
+
         /// <summary>
         /// 取得所有 PorductName 和 PorductID
         /// </summary>

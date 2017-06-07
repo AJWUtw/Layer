@@ -1,0 +1,366 @@
+﻿<div class="demo-section k-content" id="content">
+    <form id="updateForm" data-role="validator">
+        <input type="hidden" value="@ViewBag.OrderId" id="orderId" name="OrderId"/>
+        <table>
+            <tr>
+                <td>
+                    <label style="width:100%"><span class="required">*</span>客戶名稱</label>
+                </td>
+                <td>
+                    <input id="updateCustName" name="CustName" class="customers" value="@ViewBag.CustId" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><span class="required">*</span>負責員工名稱</label>
+                </td>
+                <td>
+                    <input id="updateEmpName" name="EmpName" class="employees" value="@ViewBag.EmpId" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="OrderDate"><span class="required">*</span>訂單日期</label>
+                </td>
+                <td>
+                    <input type="text" id="updateOrderDate" name="OrderDate" value="@ViewBag.OrderDate" required="required"  />
+                    <span data-for='OrderDate' class='k-invalid-msg'></span>
+                </td>
+                <td>
+                    <label for="RequiredDate"><span class="required">*</span>需要日期</label>
+                </td>
+                <td>
+                    <input type="text" data-role='datepicker' id="updateRequiredDate" data-type="date" name="RequiredDate" data-greaterdate-field="OrderDate" value="@ViewBag.RequiredDate"  data-greaterdate-msg='Required Date should be after Order date ' />
+                    <span data-for='RequiredDate' class='k-invalid-msg'></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ShippedDate"><span class="required">*</span>出貨日期</label>
+                </td>
+                <td>
+                    <input type="text" data-role='datepicker' id="updateShippedDate" data-type="date" name="ShippedDate" data-greaterdate-field="OrderDate" value="@ViewBag.ShippedDate" data-greaterdate-msg='Shipped Date should be after Hire date' />
+                    <span data-for='updateShippedDate' class='k-invalid-msg'></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><span class="required">*</span>出貨公司名稱</label>
+                </td>
+                <td>
+                    <div id="Shipper">
+                        <input id="updateShipperName" name="ShipperName" class="shippers" value="@ViewBag.ShipperId"  />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Freight">運費</label>
+                </td>
+                <td>
+                    <input id="Freight" type="number" name="Freight" title="Freight" min="0" max="100" value="@ViewBag.Freight" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ShipCountry">出貨國家</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipCountry" id="ShipCountry"value="@ViewBag.ShipCountry"  />
+                </td>
+                <td>
+                    <label for="ShipCity">出貨城市</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipCity" id="ShipCity" value="@ViewBag.ShipCity" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ShipRegion">出貨地區</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipRegion" id="ShipRegion" value="@ViewBag.ShipRegion" />
+                </td>
+                <td>
+                    <label for="ShipPostalCode">郵遞區號</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipPostalCode" id="ShipPostalCode"value="@ViewBag.ShipPostalCode"  />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ShipAddress">出貨地址</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipAddress" id="ShipAddress" value="@ViewBag.ShipAddress"  />
+                </td>
+                <td>
+                    <label for="ShipName">出貨說明</label>
+                </td>
+                <td>
+                    <input type="text" class="k-textbox" name="ShipName" id="ShipName" value="333333" />
+                </td>
+            </tr>
+        </table>
+    </form>
+    <button id="updateButton" class="k-primary" data-role="button">修改</button>
+    <div id='updateList'></div>
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+
+        function UpdatePage() {
+            var updatePage = this;
+
+
+            this.productNameDropDownEditor = function (container, options) {
+                $('<input required name="' + options.field + '"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        //valuePrimitive: true,
+                        autoBind: false,
+                        dataTextField: "ProductName",
+                        dataValueField: "ProductId",
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: "../Order2/ReadPorductList",
+                                parameterMap: function (options, operation) {
+                                    if (operation !== "read" && options.models) {
+                                        return { models: kendo.stringify(options.models) };
+                                    }
+                                }
+                            },
+                            schema: {
+                                model: {
+                                    fields: {
+                                        ProductName: { type: "string" },
+                                        ProductId: { type: "number" }
+                                    }
+                                }
+                            },
+                            change: function (e) {
+                                if (e.action === "itemchange" && e.field !== "Sum") {
+                                    var model = e.items[0],
+                                        type = model.Type;
+                                }
+                            }
+                        }
+                    });
+            }
+
+
+            this.showUpdateDataGrid = function (orderId) {
+                var updateDataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            dataType: "json",
+                            url: "../Order2/GetOrderDetailById?id=" + orderId,
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation !== "read" && options.models) {
+                                return { models: kendo.stringify(options.models) };
+                            }
+                        }
+                    },
+                    batch: true,
+                    schema: {
+                        model: {
+                            id: "OrderId",
+                            fields: {
+                                OrderId: { type: "number" },
+                                ProductId: { type: "number" },
+                                ProductName: { defaultValue: { ProductId: 1, ProductName: "Product HHYDP" } },
+                                UnitPrice: { type: "number", validation: { min: 0, required: true } },
+                                Qty: { type: "number", validation: { min: 0, required: true } },
+                                Discount: { type: "number" },
+                                Sum: { type: "number", validation: { min: 0, required: true } },
+                            }
+                        }
+                    },
+                    change: function (e) {
+                        console.log(e);
+                        if (e.action === "itemchange" && e.field == "ProductName") {
+                            var model = e.items[0],
+                                type = model.Type;
+                            console.log(model);
+                            $.get("../Order2/ReadPorductById", { id: model.ProductName.ProductId },
+                              function (data) {
+                                  UnitPrice = data[0].UnitPrice;
+                                  currentValue = UnitPrice * model.Qty;
+                                  model.UnitPrice = UnitPrice;
+                                  $("#insertList").find("tr[data-uid='" + model.uid + "'] td:eq(1)").text('$' + UnitPrice);
+                                  if (currentValue !== model.Sum) {
+                                      model.Sum = currentValue;
+                                      $("#insertList").find("tr[data-uid='" + model.uid + "'] td:eq(3)").text('$' + currentValue);
+                                  }
+                              });
+                        } else if (e.action === "itemchange" && (e.field == "UnitPrice" || e.field == "Qty")) {
+                            var model = e.items[0],
+                                type = model.Type;
+                            UnitPrice = model.UnitPrice;
+                            currentValue = UnitPrice * model.Qty;
+                            if (currentValue !== model.Sum) {
+                                model.Sum = currentValue;
+                                $("#insertList").find("tr[data-uid='" + model.uid + "'] td:eq(3)").text('$' + currentValue);
+                            }
+
+                        }
+                    }
+                });
+
+                $("#updateList").kendoGrid({
+                    dataSource: updateDataSource,
+                    height: 230,
+                    width: "100%",
+                    filterable: true,
+                    sortable: true,
+                    editable: true,
+                    toolbar: ["create"],
+                    columns: [
+                        { field: "ProductName", title: "ProductName", width: "180px", editor: updatePage.productNameDropDownEditor, template: "#=ProductName.ProductName#" },
+                        { field: "UnitPrice", title: "UnitPrice", width: 110, format: "{0:c2}" },
+                        { field: "Qty", title: "Qty", width: 110 },
+                        { field: "Sum", title: "Sum", width: 110, format: "{0:c2}" },
+                        {
+                            title: "Edit", command: ["destroy"], width: 80,
+                            attributes: {
+                                style: "text-align: center;"
+                            }
+                        }
+                    ]
+                });
+            };
+
+            this.update = function () {
+                var updateList = $("#updateList").data("kendoGrid");
+                var validator = $("#updateForm").data("kendoValidator");
+                console.log($("#updateForm"));
+                var data = $('#updateForm').serializeObject();
+                data.Products = $("#updateList").data('kendoGrid').dataSource.data().toJSON();
+                if (validator.validate()) {
+                    console.log(validator);
+                    $.ajax({
+                        url: '../Order2/UpdateOrder',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data) {
+                                var window = $("#updateWindow").data("kendoWindow");
+                                window.close();
+                            } else {
+                                console.log("Fail");
+                            }
+                        }
+                    });
+                }
+            }
+
+        }
+
+        var updatePage = new UpdatePage();
+
+        $("#updateButton").kendoButton({
+            click: updatePage.update
+        });
+        updatePage.showUpdateDataGrid($("#orderId")[0].defaultValue);
+
+        $("#updateCustName").kendoComboBox({
+            placeholder: "Select Customers",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            //filter: "contains",
+            autoBind: true,
+            editable: false,
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "../Order2/ReadCustomerList",
+                    }
+                }
+            }
+        });
+        $("#updateCustName").attr("readonly", "readonly");
+
+        // Employees ComboBox
+        $("#updateEmpName").kendoComboBox({
+            placeholder: "Select Employees",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataBind: "Text",
+            autoBind: true,
+            editable: false,
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "../Order2/ReadEmployeeList",
+                    }
+                }
+            }
+        });
+        $("#updateEmpName").attr("readonly", "readonly");
+
+        // Shippers ComboBox
+        $("#updateShipperName").kendoComboBox({
+            readOnly: true,
+            placeholder: "Select Shippers",
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataBind: "Text",
+            autoBind: true,
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "../Order2/ReadShipperList",
+                    }
+                }
+            }
+        });
+        $("#updateShipperName").attr("readonly", "readonly");
+        $("#updateOrderDate").kendoDatePicker({ dateInput: true, format: "yyyy-MM-dd", parseFormats: ["yyyy/MM/dd"] });
+        $("#updateRequiredDate").kendoDatePicker({ dateInput: true, format: "yyyy-MM-dd", parseFormats: ["yyyy/MM/dd"] });
+        $("#updateShippedDate").kendoDatePicker({ dateInput: true, format: "yyyy-MM-dd", parseFormats: ["yyyy/MM/dd"] });
+
+        $(function () {
+            var container = $("#updateForm");
+            kendo.init(container);
+            $("#updateForm").kendoValidator({
+                rules: {
+                    greaterdate: function (input) {
+                        if ((input.is("[name=RequiredDate]") || input.is("[name=ShippedDate]")) && input.val() != "") {
+                            var date = kendo.parseDate($("[name='" + input[0].name + "']")[1].value),
+                                otherDate = kendo.parseDate($("[name='OrderDate']")[1].value);
+                            return otherDate == null || otherDate.getTime() < date.getTime();
+                        }
+                        return true;
+                    },
+                    comboboxRequired: function (input) {
+                        if (input.is("[name=CustName_input]") || input.is("[name=EmpName_input]") || input.is("[name=ShipperName_input]")) {
+                            if (input[0].value == "") {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                },
+                messages: {
+                    comboboxRequired: "Required",
+                    greaterdate: "訂購日期需早於送貨日期及要求日期"
+
+                }
+            });
+        });
+
+    })
+    
+    //})
+</script>

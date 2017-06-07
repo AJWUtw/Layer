@@ -221,7 +221,7 @@ namespace eSaleDao
                     OUTPUT INSERTED.OrderID 
 						VALUES
 						(
-							@CustomerID,@EmployeeID,@Orderdate,@Requireddate,@Shippeddate,@Shipperid,@Freight,
+							@CustomerID,@EmployeeID,@Orderdate,@RequiredDate,@Shippeddate,@Shipperid,@Freight,
 							@Shipname,@Shipaddress,@Shipcity,@Shipregion,@Shippostalcode,@Shipcountry
 						)";
             string sql_2 = @" Insert INTO Sales.OrderDetails
@@ -254,9 +254,9 @@ namespace eSaleDao
                     command.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
                     command.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
                     command.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
-                    command.Parameters.Add(new SqlParameter("@RequireDdate", order.RequiredDate));
+                    command.Parameters.Add(new SqlParameter("@RequiredDate", order.RequiredDate));
                     command.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
-                    command.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId));
+                    command.Parameters.Add(new SqlParameter("@ShipperId", order.ShipperId ));
                     command.Parameters.Add(new SqlParameter("@Freight", order.Freight));
                     command.Parameters.Add(new SqlParameter("@Shipname", "aa"));
                     command.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
@@ -270,7 +270,7 @@ namespace eSaleDao
 
                     command.CommandText = sql_2;
 
-                    if (order.Products.Count > 0)
+                    if ( order.Products!=null)
                     {
                         for (int i = 0; i < order.Products.Count; i++)
                         {
